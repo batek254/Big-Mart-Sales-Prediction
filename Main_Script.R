@@ -1,5 +1,5 @@
-#Wczytanie bibliotek
-library(readr)
+#Sprawdzanie i ładowanie bibliotek
+require("readr")
 
 #Sciezka
 Path <- getwd()
