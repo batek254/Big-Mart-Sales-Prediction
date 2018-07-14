@@ -102,4 +102,3 @@ TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Outlet_Type))) + geom_bar(w
 
 #Wykres gęstości wagi przedmiotu
 TrainSet %>% ggplot(aes(x = Item_Weight)) + geom_density()
-
