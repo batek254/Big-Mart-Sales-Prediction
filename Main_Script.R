@@ -84,7 +84,7 @@ TrainSet$Item_Fat_Content[which(TrainSet$Item_Fat_Content == "reg")] <- "Regular
 
 #Wykresy
 
-#Diagram kołowy typów produktów
+#Diagram kołowy typów produktów 
 table(TrainSet$Item_Type)
 TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Item_Type))) + geom_bar(width = 1) + coord_polar(theta = "y")
 
