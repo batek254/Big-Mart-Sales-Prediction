@@ -91,7 +91,7 @@ summary(Outlet_Establishment_Year_data_frame)
 
 #histogram
 TrainSet %>% ggplot(aes(x = Item_Visibility)) +
-  geom_histogram(bins = 50)
+  geom_histogram(bins = 50, color = "blue")
 
 #podsumowanie
 summary(Item_Visibility)
@@ -102,7 +102,7 @@ summary(Item_Visibility)
 
 #histogram
 TrainSet %>% ggplot(aes(x = Item_MRP)) +
-      geom_histogram(bins = 50)
+      geom_histogram(bins = 50, color= "blue")
 
 
 #podsumowanie
