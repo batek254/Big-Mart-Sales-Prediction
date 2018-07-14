@@ -65,3 +65,11 @@ ggplot(Outlet_Identifier_data_frame, aes(x= Var1 , y= Freq))+
 
 #podsumowanie
 summary(Outlet_Identifier_data_frame)
+
+
+#zawartość tłuszczów 
+as.data.frame(table(Item_Fat_Content))->Item_Fat_Content_data_frame
+ggplot(Item_Fat_Content_data_frame, aes(x= Item_Fat_Content , y= Freq))+ geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
+labs(x = 'tłuszcz', y = "występywanie")
+
+summary(Item_Fat_Content_data_frame)
