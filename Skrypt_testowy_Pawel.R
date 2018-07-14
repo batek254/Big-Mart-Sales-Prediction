@@ -46,7 +46,10 @@ ggplot(data = Typ_produktu_data_frame, aes(x= Var1, y= Freq, group = 1))+
 
 #Troszkę inny sposób, histogram to jest dokładnie wykres częstości, dla danych discrete używamy stat = "count"
 #wtedy sam liczy częstość występowania cechy
-TrainSet %>% ggplot(aes(x = Item_Type)) + geom_histogram(stat = "count") #+ scale_x_discrete(labels = abbreviate) gdy axis labels nachodzą na siebie
+TrainSet %>% ggplot(aes(x = Item_Type)) + 
+  geom_histogram(stat = "count") +
+  scale_x_discrete(labels = abbreviate)
+#gdy axis labels nachodzą na siebie
 
 #podsumowanie
 summary(Typ_produktu_data_frame)
@@ -118,7 +121,8 @@ TrainSet %>% ggplot(aes(x = Item_Visibility)) +
 
 #podsumowanie
 summary(Item_Visibility)
-sd(Item_Visibility)
+
+IQR(Item_Visibility)
 kurtosis(Item_Visibility)
 skewness(Item_Visibility)
 
@@ -133,8 +137,11 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
 
 #podsumowanie
  summary(Item_MRP)
+ IQR(Item_MRP)
+ 
  skewness(Item_MRP)
  kurtosis(Item_MRP)
+ 
 
  
  ###Item_weight
@@ -144,7 +151,8 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
    geom_histogram(bins = 50, color = "blue")
   
   #podsumowanie
- summary(Item_Weight)
+ summary(Item_Weight, na.rm=T)
+ IQR(Item_Weight, na.rm=T)
  skewness(Item_Weight, na.rm = T)
  kurtosis(Item_Weight, na.rm = T)
  
@@ -156,7 +164,39 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
       geom_histogram(bins = 50, color = "blue")
  #podsumowanie
  summary(Item_Outlet_Sales)
+ IQR(Item_Outlet_Sales)
  skewness(Item_Outlet_Sales, na.rm = T)
  kurtosis(Item_Outlet_Sales, na.rm = T)
-  ##
+  
+ 
+ #data without outliers
+ ##sposob z https://www.youtube.com/watch?v=6hRKlZ8D_mk
+ 
+ #item visibility
+ summary(Item_Visibility)
+ benchIVS<- 0.09459 + 1.5*IQR(Item_Visibility)
+ Item_Visibility[Item_Visibility< benchIVS]-> Item_Visibility_Without_Outliers
+ 
+ #histogram
+ ggplot( as.data.frame(Item_Visibility_Without_Outliers),
+         aes(x =Item_Visibility_Without_Outliers))+ 
+   geom_histogram()
+
+ length(Item_Visibility)
+ length(Item_Visibility_Without_Outliers)
+ 
+ 
+ #item outlet sales
+ summary(Item_Outlet_Sales)
+ benchIOSS<- 3101.30 + 1.5*IQR(Item_Outlet_Sales)
+ Item_Outlet_Sales[Item_Outlet_Sales< benchIOSS]-> 
+   Item_OUtlet_Sales_Without_Outliers
+ 
+ #histogram
+ ggplot(as.data.frame(Item_OUtlet_Sales_Without_Outliers),
+        aes(x= Item_OUtlet_Sales_Without_Outliers))+
+   geom_histogram()
+ 
+ length(Item_Outlet_Sales)
+ length(Item_OUtlet_Sales_Without_Outliers)
  
