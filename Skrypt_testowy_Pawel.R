@@ -86,3 +86,26 @@ summary(Outlet_Establishment_Year_data_frame)
 
 
 
+##widzialność produktu 
+
+
+#histogram
+TrainSet %>% ggplot(aes(x = Item_Visibility)) +
+  geom_histogram(bins = 50)
+
+#podsumowanie
+summary(Item_Visibility)
+
+
+##MRP
+
+
+#histogram
+TrainSet %>% ggplot(aes(x = Item_MRP)) +
+      geom_histogram(bins = 50)
+
+
+#podsumowanie
+ summary(Item_MRP)
+
+
