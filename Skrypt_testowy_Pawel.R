@@ -25,6 +25,10 @@ as.data.frame(table(TrainSet$Item_Type))-> Typ_produktu_data_frame
 ggplot(data = Typ_produktu_data_frame, aes(x= Var1, y= Freq, group = 1))+
   geom_bar(stat= 'identity',color = 'blue')+ labs(x= "produkt", y= 'częstosc zakupu')
 
+#Troszkę inny sposób, histogram to jest dokładnie wykres częstości, dla danych discrete używamy stat = "count"
+#wtedy sam liczy częstość występowania cechy
+TrainSet %>% ggplot(aes(x = Item_Type)) + geom_histogram(stat = "count") #+ scale_x_discrete(labels = abbreviate) gdy axis labels nachodzą na siebie
+
 #podsumowanie
 summary(Typ_produktu_data_frame)
 
@@ -36,7 +40,7 @@ summary(Typ_produktu_data_frame)
 table(TrainSet$Outlet_Location_Type)
 as.data.frame(table(TrainSet$Outlet_Location_Type))-> Outlet_Localisation_data_frame
 ggplot(Outlet_Localisation_data_frame, aes(x= Var1 , y= Freq))+
-  geom_bar(stat ="identity", alpha= 0.6, color= 'green')+
+  geom_bar(stat ="identity", alpha= 0.6, color= 'green') +
   labs(x = 'Tier', y = "ilość")
 
 
