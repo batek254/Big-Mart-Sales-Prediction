@@ -1,5 +1,7 @@
 #Wczytanie bibliotek
 library(readr)
+library(e1071)
+library(moments)
 
 ###Sciezka
 Path <- getwd()
@@ -13,7 +15,7 @@ Submission <- read_csv(paste(Path, "/Submission.csv", sep=""))
 View(Submission)
 
 ###wykresy
-
+######Dane ciągłe (ilościowe) w naszym secie to Item_Weight, Item_Visibility, Item_MRP, Item_Outlet_Sales (!ROK JEST DYSKRETNĄ!)
 
 ##typ produktu
 
@@ -23,7 +25,24 @@ View(Submission)
 table(TrainSet$Item_Type)
 as.data.frame(table(TrainSet$Item_Type))-> Typ_produktu_data_frame
 ggplot(data = Typ_produktu_data_frame, aes(x= Var1, y= Freq, group = 1))+
-  geom_bar(stat= 'identity',color = 'blue')+ labs(x= "produkt", y= 'częstosc zakupu')
+  geom_bar(stat= 'identity',color = 'blue')+ labs(x= "produkt", y= 'częstosc zakupu')+
+  scale_x_discrete(labels = abbreviate)
+
+###boxplot
+
+#item visibility
+ TrainSet %>% ggplot(aes(x= "box_plot_item_visibility",y= Item_Visibility))+geom_boxplot()
+ 
+ #item_MRP
+ TrainSet %>% ggplot(aes(x= "Item_MRP",y= Item_MRP))+geom_boxplot()
+
+#item weight
+ TrainSet %>% ggplot(aes(x= "Item_Weight",y= Item_Weight))+geom_boxplot()
+
+ #item outlet sales
+ TrainSet %>% ggplot(aes(x= "Outlet_Sales",y= Item_Outlet_Sales))+geom_boxplot()
+
+
 
 #Troszkę inny sposób, histogram to jest dokładnie wykres częstości, dla danych discrete używamy stat = "count"
 #wtedy sam liczy częstość występowania cechy
@@ -99,7 +118,9 @@ TrainSet %>% ggplot(aes(x = Item_Visibility)) +
 
 #podsumowanie
 summary(Item_Visibility)
-
+sd(Item_Visibility)
+kurtosis(Item_Visibility)
+skewness(Item_Visibility)
 
 ##MRP
 
@@ -109,7 +130,33 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
       geom_histogram(bins = 50, color= "blue")
 
 
+
 #podsumowanie
  summary(Item_MRP)
+ skewness(Item_MRP)
+ kurtosis(Item_MRP)
 
-
+ 
+ ###Item_weight
+ 
+ #histogram
+ TrainSet %>% ggplot(aes(x = Item_Weight)) +
+   geom_histogram(bins = 50, color = "blue")
+  
+  #podsumowanie
+ summary(Item_Weight)
+ skewness(Item_Weight, na.rm = T)
+ kurtosis(Item_Weight, na.rm = T)
+ 
+ 
+ ###Item Outlet sales
+ 
+ #histogram
+ TrainSet %>% ggplot(aes(x = Item_Outlet_Sales)) +
+      geom_histogram(bins = 50, color = "blue")
+ #podsumowanie
+ summary(Item_Outlet_Sales)
+ skewness(Item_Outlet_Sales, na.rm = T)
+ kurtosis(Item_Outlet_Sales, na.rm = T)
+ 
+ 
