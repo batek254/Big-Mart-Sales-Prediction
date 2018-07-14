@@ -158,5 +158,5 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  summary(Item_Outlet_Sales)
  skewness(Item_Outlet_Sales, na.rm = T)
  kurtosis(Item_Outlet_Sales, na.rm = T)
-  #
+  ##
  
