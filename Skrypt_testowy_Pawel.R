@@ -73,3 +73,16 @@ ggplot(Item_Fat_Content_data_frame, aes(x= Item_Fat_Content , y= Freq))+ geom_ba
 labs(x = 'tłuszcz', y = "występywanie")
 
 summary(Item_Fat_Content_data_frame)
+
+
+## powstawanie sklepów
+as.data.frame(table(Outlet_Establishment_Year))->Outlet_Establishment_Year_data_frame
+ggplot(Outlet_Establishment_Year_data_frame, aes(x= Outlet_Establishment_Year, y= Freq))+
+  geom_bar(stat = 'identity')+
+  labs(x= "rok powstania",y = "ilość")
+
+#podsumowanie
+summary(Outlet_Establishment_Year_data_frame)
+
+
+
