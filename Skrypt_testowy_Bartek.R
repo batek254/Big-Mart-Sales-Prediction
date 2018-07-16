@@ -10,6 +10,10 @@ library(DMwR)
 library(VIM)
 library(outliers)
 
+#==================================================================================
+#!!!!!!!!!!!!!!!!!!!!!!!UŻYĆ STAT_SUMMARY, GEOM_VIOLIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#==================================================================================
+
 Path <- getwd()
 
 TrainSet <- read_csv(paste(Path, "/Train.csv", sep=""))
@@ -31,8 +35,9 @@ Grubbs_Item_Visibility <- grubbs.test(TrainSet$Item_Visibility)
 TrainSet %>% select(Item_Visibility) %>% arrange(desc(Item_Visibility)) %>% ggplot(aes(x = 1:nrow(TrainSet), y = Item_Visibility)) + geom_point()
 grubbs.test(TrainSet$Item_MRP)
 TrainSet %>% select(Item_Outlet_Sales) %>% arrange(desc(Item_Outlet_Sales))
-Gdubbs_Item_Outlet_Sales <- grubbs.test(TrainSet$Item_Outlet_Sales)
+Grubbs_Item_Outlet_Sales <- grubbs.test(TrainSet$Item_Outlet_Sales)
 TrainSet %>% select(Item_Outlet_Sales) %>% arrange(desc(Item_Outlet_Sales)) %>% ggplot(aes(x = 1:nrow(TrainSet), y = Item_Outlet_Sales)) + geom_point()
+grubbs.test(TrainSet$Item_Outlet_Sales)
 
 Testowy <- TrainSet
 Grubbs_Item_Visibility_Testowy <- grubbs.test(Testowy$Item_Visibility)
