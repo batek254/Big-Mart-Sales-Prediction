@@ -213,6 +213,7 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  require(outliers)
  library(outliers)
 
+ 
  grubbs.test(Item_Outlet_Sales)
  grubbs.test(Item_Visibility)
  grubbs.test(Item_Weight)
@@ -223,14 +224,13 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  outliers_Iv <-c(Item_Visibility[Item_Visibility>benchIVS])
  outliers_Iv
  
-#Mam małe pytanko. Czemu używasz tutaj histogramu?
  ggplot(as.data.frame(outliers_Iv),
              aes(x= outliers_Iv))+
       geom_histogram(fill= "red", col ="black")
     
       summary(outliers_Iv)  
   
-#item_outlet_sales      
+#item_outlet_sales      ou
  
  outliers_IOS<-c(Item_Outlet_Sales[Item_Outlet_Sales>benchIOSS])
  outliers_IOS
@@ -241,31 +241,40 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  
  summary(outliers_IOS)  
  
-#Sprawdźmy wartości z outliers i bez
+ #mahalanobis 
  
- TrainSet %>% 
-   select(Item_Visibility) %>% 
-   arrange(desc(Item_Visibility)) %>%
-   ggplot(aes(x = 1:nrow(TrainSet), y = Item_Visibility)) +
-   geom_point()
+ data.frame(Item_Visibility, Item_Outlet_Sales)->IVS.d
+ MD <- mahalanobis(IVS.d, colMeans(IVS.d), cov(IVS.d))
+ IVS.d$MD <- round(MD,3)
+ benchMD<- 2.2423+ 1.5*IQR(MD)
+ IVS.d$outlier_maha <- "F"
+ IVS.d$outlier_maha[IVS.d$MD > benchMD]<-"T"
  
- TrainSet %>% 
-   select(Item_Visibility) %>%
-   filter(Item_Visibility <= benchIVS) %>%
-   arrange(desc(Item_Visibility)) %>%
-   ggplot(aes(x = 1:(nrow(TrainSet) - length(outliers_Iv)), y = Item_Visibility)) +
-   geom_point()
+ 
+ #Searching for outliers using Grubbs Test
+ TrainSet %>% select(Item_Weight) %>% arrange(desc(Item_Weight))
+ grubbs.test(TrainSet$Item_Weight)
+ TrainSet %>% select(Item_Visibility) %>% arrange(desc(Item_Visibility))
+ Grubbs_Item_Visibility <- grubbs.test(TrainSet$Item_Visibility)
+ TrainSet %>% select(Item_Visibility) %>% arrange(desc(Item_Visibility)) %>% ggplot(aes(x = 1:nrow(TrainSet), y = Item_Visibility)) + geom_point()
+ grubbs.test(TrainSet$Item_MRP)
+ TrainSet %>% select(Item_Outlet_Sales) %>% arrange(desc(Item_Outlet_Sales))
+ Gdubbs_Item_Outlet_Sales <- grubbs.test(TrainSet$Item_Outlet_Sales)
+ TrainSet %>% select(Item_Outlet_Sales) %>% arrange(desc(Item_Outlet_Sales)) %>% ggplot(aes(x = 1:nrow(TrainSet), y = Item_Outlet_Sales)) + geom_point()
+ 
+ Testowy <- TrainSet
+ Grubbs_Item_Visibility_Testowy <- grubbs.test(Testowy$Item_Visibility)
+ Grubbs_Item_MRP_Testowy <- grubbs.test(Testowy$Item_MRP)
+ 
+ #wersja Alpha
+ #item_visiblity
+ while(Grubbs_Item_Visibility_Testowy$p.value <= 0.05){
+   Testowy <- Testowy[-which.max(Testowy$Item_Visibility),]
+   Grubbs_Item_Visibility_Testowy <- grubbs.test(Testowy$Item_Visibility)
+ }
 
- #Teraz pojawia się pytanie, na ile jest tych outliers, spójrzmy z innej strony
  
- TrainSet %>% 
-   select(Item_Visibility) %>% 
-   arrange(desc(Item_Visibility)) %>%
-   ggplot(aes(x = 1:nrow(TrainSet), y = Item_Visibility)) +
-   geom_point(aes(colour = Item_Visibility > benchIVS)) +
-   scale_colour_manual(values = c("blue", "red"))
+
  
- #Te na czerwono to są outliers z outliers_Iv, nie jestem pewien, czy zasadne jest odrzucenie ich tak wielu, z tego
- #co widzimy jest utrata sporej ilości naszych danych, a nawet kształtu wykresu. Jestem ciekaw co o tym sądzisz. Warto
- #zwrócić uwagę, że w teście Grubbsa wyszło mi 30 outliers, a nie 144. Dodatkowo ilość outliers z testu Grubbsa mocno
- #zależy od przyjętego poziomu istotności (0.05)
+ 
+ 
