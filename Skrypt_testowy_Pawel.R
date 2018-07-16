@@ -185,7 +185,9 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
 
  length(Item_Visibility)
  length(Item_Visibility_Without_Outliers)
- 
+  
+ #podsumowanie
+ summary(Item_Visibility_Without_Outliers)
  
  #item outlet sales
  summary(Item_Outlet_Sales)
@@ -200,4 +202,42 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  
  length(Item_Outlet_Sales)
  length(Item_OUtlet_Sales_Without_Outliers)
+ 
+ #podsumowanie
+ summary(Item_OUtlet_Sales_Without_Outliers)
+ 
+ 
+ #data_without_outliers
+ #Grubbs test
+ 
+ require(outliers)
+ library(outliers)
+
+ 
+ grubbs.test(Item_Outlet_Sales)
+ grubbs.test(Item_Visibility)
+ grubbs.test(Item_Weight)
+ grubbs.test(Item_MRP)
+ 
+ #outliers
+#item_visibility
+ outliers_Iv <-c(Item_Visibility[Item_Visibility>benchIVS])
+ outliers_Iv
+ 
+ ggplot(as.data.frame(outliers_Iv),
+             aes(x= outliers_Iv))+
+      geom_histogram(fill= "red", col ="black")
+    
+      summary(outliers_Iv)  
+  
+#item_outlet_sales      
+ 
+ outliers_IOS<-c(Item_Outlet_Sales[Item_Outlet_Sales>benchIOSS])
+ outliers_IOS
+ 
+ ggplot(as.data.frame(outliers_IOS),
+        aes(x= outliers_IOS))+
+ geom_histogram(fill= "red", col ="black")
+ 
+ summary(outliers_IOS)  
  
