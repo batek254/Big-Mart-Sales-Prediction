@@ -213,7 +213,6 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  require(outliers)
  library(outliers)
 
- 
  grubbs.test(Item_Outlet_Sales)
  grubbs.test(Item_Visibility)
  grubbs.test(Item_Weight)
@@ -224,6 +223,7 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  outliers_Iv <-c(Item_Visibility[Item_Visibility>benchIVS])
  outliers_Iv
  
+#Mam małe pytanko. Czemu używasz tutaj histogramu?
  ggplot(as.data.frame(outliers_Iv),
              aes(x= outliers_Iv))+
       geom_histogram(fill= "red", col ="black")
@@ -241,3 +241,31 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  
  summary(outliers_IOS)  
  
+#Sprawdźmy wartości z outliers i bez
+ 
+ TrainSet %>% 
+   select(Item_Visibility) %>% 
+   arrange(desc(Item_Visibility)) %>%
+   ggplot(aes(x = 1:nrow(TrainSet), y = Item_Visibility)) +
+   geom_point()
+ 
+ TrainSet %>% 
+   select(Item_Visibility) %>%
+   filter(Item_Visibility <= benchIVS) %>%
+   arrange(desc(Item_Visibility)) %>%
+   ggplot(aes(x = 1:(nrow(TrainSet) - length(outliers_Iv)), y = Item_Visibility)) +
+   geom_point()
+
+ #Teraz pojawia się pytanie, na ile jest tych outliers, spójrzmy z innej strony
+ 
+ TrainSet %>% 
+   select(Item_Visibility) %>% 
+   arrange(desc(Item_Visibility)) %>%
+   ggplot(aes(x = 1:nrow(TrainSet), y = Item_Visibility)) +
+   geom_point(aes(colour = Item_Visibility > benchIVS)) +
+   scale_colour_manual(values = c("blue", "red"))
+ 
+ #Te na czerwono to są outliers z outliers_Iv, nie jestem pewien, czy zasadne jest odrzucenie ich tak wielu, z tego
+ #co widzimy jest utrata sporej ilości naszych danych, a nawet kształtu wykresu. Jestem ciekaw co o tym sądzisz. Warto
+ #zwrócić uwagę, że w teście Grubbsa wyszło mi 30 outliers, a nie 144. Dodatkowo ilość outliers z testu Grubbsa mocno
+ #zależy od przyjętego poziomu istotności (0.05)
