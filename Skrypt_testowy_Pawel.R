@@ -13,7 +13,7 @@ TestSet <- read_csv(paste(Path, "/Test.csv", sep=""))
 View(TestSet)
 Submission <- read_csv(paste(Path, "/Submission.csv", sep=""))
 View(Submission)
-
+attach(TrainSet)
 ###wykresy
 ######Dane ciągłe (ilościowe) w naszym secie to Item_Weight, Item_Visibility, Item_MRP, Item_Outlet_Sales (!ROK JEST DYSKRETNĄ!)
 
@@ -72,6 +72,7 @@ ggplot(Outlet_Localisation_data_frame, aes(x= Var1 , y= Freq))+
 
 #wykres kołowy
 table(TrainSet$Outlet_Size)
+as.data.frame(table(TrainSet$Outlet_Size))->Outlet_Size_data_frame
 TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Outlet_Size))) + geom_bar(width = 1) + coord_polar(theta = "y")
 
 #wykres słupkowy
@@ -180,7 +181,7 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  #histogram
  ggplot( as.data.frame(Item_Visibility_Without_Outliers),
          aes(x =Item_Visibility_Without_Outliers))+ 
-   geom_histogram()
+   geom_histogram(fill='orange', col ='black')
 
  length(Item_Visibility)
  length(Item_Visibility_Without_Outliers)
@@ -195,7 +196,7 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  #histogram
  ggplot(as.data.frame(Item_OUtlet_Sales_Without_Outliers),
         aes(x= Item_OUtlet_Sales_Without_Outliers))+
-   geom_histogram()
+   geom_histogram(fill= "red", col ="black")
  
  length(Item_Outlet_Sales)
  length(Item_OUtlet_Sales_Without_Outliers)
