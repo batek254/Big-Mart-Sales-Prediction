@@ -274,7 +274,9 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  }
 
  
-
+##### z uwagi na dużą probę przyjmujemy założenie o tym, że
+ # rozkłady danych z Trainset można aproksymować rozkładem 
+ # normalnym.
  
  
  
