@@ -294,4 +294,30 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  # normalnym.
  
  
+ #wykresy 2 danych
+ data.frame(Outlet_Establishment_Year, Outlet_Type, Outlet_Size)->do.wykresów
+
+ 
+ ####rok powstania sklepóW a ich wielkosc####
+ table(Outlet_Establishment_Year, Outlet_Size)
+ 
+ #widzimy że najwiecej sklepów to male jednostki,
+ #rowniez widizmy ze najwiecej sklepow uzwytych w tym projekcie
+ #powstalo w 1985r
+ 
+ #wykres
+ as.data.frame(table(Outlet_Establishment_Year, Outlet_Size, Outlet_Location_Type))->a
+ qplot(Outlet_Establishment_Year, Freq, color = Outlet_Size,
+       data =a, size =4, facets = .~ Outlet_Location_Type)+
+   scale_x_discrete(labels = abbreviate)
+ #wykres ilsoci powstalych sklepów, w danych latach, pogrupownych
+ #wg lokalizacji,kolor oznacza wielkosc sklepu
+ 
+ 
+ #
+ 
+ 
+ 
+ 
+ 
  
