@@ -76,6 +76,7 @@ TrainSet <- na.omit(TrainSet)
 anyNA(TrainSet)
 
 #Następnym krokiem będzie poszukiwanie wartości odstających (outliers)
+#Pomijamy ten krok na ten moment
 
 #Następnie uporządkowanie danych typu low fat
 TrainSet$Item_Fat_Content[which(TrainSet$Item_Fat_Content == "LF")] <- "Low Fat"
@@ -85,20 +86,52 @@ TrainSet$Item_Fat_Content[which(TrainSet$Item_Fat_Content == "reg")] <- "Regular
 #Wykresy
 
 #Diagram kołowy typów produktów 
-table(TrainSet$Item_Type)
-TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Item_Type))) + geom_bar(width = 1) + coord_polar(theta = "y")
+#Możemy użyć tego wykresu
+TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Item_Type))) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y") +
+  labs(x = "", y = "", fill = "Typ produktu")
+#Lub tego
+TrainSet %>% ggplot(aes(x = Item_Type, fill = factor(Item_Type))) +
+  geom_histogram(stat="count") +
+  coord_polar(theta = "y") +
+  labs(x = "", y = "", fill = 'Typ produktu')
+#Lub tego
+TrainSet %>% ggplot(aes(x = Item_Type, fill = factor(Item_Type))) + 
+  geom_histogram(stat="count") + 
+  coord_polar(theta = "x") + 
+  labs(x = "", y = "", fill = 'Typ produktu')
+#Lub standardowego
+TrainSet %>% ggplot(aes(x = Item_Type, fill = factor(Item_Type))) + 
+  geom_histogram(stat="count") +
+  labs(x = "Typ produktu", y = "Częstość", fill = "")
+#Można to ładnie posortować jeszcze, ale nie wiem, czy jest sens. Wtedy mamy:
+TrainSet %>% select(Item_Type) %>% table() %>% as.data.frame() %>%
+  ggplot(aes(x = reorder(., Freq), y = Freq, fill = factor(.))) +
+  geom_bar(stat = "identity") +
+  coord_polar(theta = "y") + 
+  labs(x = "", y = "", fill = 'Typ produktu')
 
-#Diagram kołowy zawartosci tluszczow - widac dane do poprawy
+#Diagram kołowy zawartosci tluszczow
 table(TrainSet$Item_Fat_Content)
-TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Item_Fat_Content))) + geom_bar(width = 1) + coord_polar(theta = "y")
+TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Item_Fat_Content))) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y") +
+  labs(x = "", y = "", fill = "Zawartość tłuszczu")
 
 #Diagram kołowy lokalizacji sklepów
 table(TrainSet$Outlet_Location_Type)
-TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Outlet_Location_Type))) + geom_bar(width = 1) + coord_polar(theta = "y")
+TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Outlet_Location_Type))) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y") +
+  labs(x = "", y = "", fill = "Typ lokalizacji")
 
 #Diagram kołowy typu sklepów
 table(TrainSet$Outlet_Type)
-TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Outlet_Type))) + geom_bar(width = 1) + coord_polar(theta = "y")
+TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Outlet_Type))) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y") +
+  labs(x = "", y = "", fill = "Typ sklepu")
 
 #Wykres gęstości wagi przedmiotu
 TrainSet %>% ggplot(aes(x = Item_Weight)) + geom_density()
