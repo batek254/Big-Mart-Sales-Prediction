@@ -19,6 +19,10 @@ attach(TrainSet)
 
 ##typ produktu
 
+ #funkcje
+elim.deter<- function(x){((length(x)-1)/length(x))}
+var.wd <- function(x){ sum((x-mean(x))^2)/length(x)}
+
 
 #wykres
 
@@ -121,11 +125,14 @@ TrainSet %>% ggplot(aes(x = Item_Visibility)) +
   geom_histogram(bins = 50, color = "blue")
 
 #podsumowanie
-summary(Item_Visibility)
+summary(Item_Visibility)#średnia =  0.06613 , mediana= 0.05393
 
-IQR(Item_Visibility)
-kurtosis(Item_Visibility)
-skewness(Item_Visibility)
+IQR(Item_Visibility)#rozstęp między kwartylami wynosi  0.06759582
+kurtosis(Item_Visibility)# kurtoza = 4.677757 wskazuje na wysmukły wykres
+skewness(Item_Visibility)# występuje dość znaczna asymetria prawostronna
+sd(Item_Visibility)
+elim.deter(Item_Visibility)*sd(Item_Visibility)
+
 
 ##MRP
 
@@ -137,12 +144,13 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
 
 
 #podsumowanie
- summary(Item_MRP)
- IQR(Item_MRP)
+ summary(Item_MRP)# średnia = 140.99, mediana = 143.01
+ IQR(Item_MRP)# rozstęp ćwiarkowy wynosi 91.8172
  
- skewness(Item_MRP)
- kurtosis(Item_MRP)
- 
+ skewness(Item_MRP)#skosność = 0.12718 wskazuje na to że wykres jest prawie symetryczny
+ kurtosis(Item_MRP)#kurtoza wskazuje na to że wykres jest spłaszczony
+ sd(Item_MRP)
+ elim.deter(Item_MRP)*sd(Item_MRP)
 
  
  ###Item_weight
@@ -152,10 +160,12 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
    geom_histogram(bins = 50, color = "blue")
   
   #podsumowanie
- summary(Item_Weight, na.rm=T)
- IQR(Item_Weight, na.rm=T)
- skewness(Item_Weight, na.rm = T)
- kurtosis(Item_Weight, na.rm = T)
+ summary(Item_Weight, na.rm=T)# mediana = 12.600, średnia = 12.858
+ IQR(Item_Weight, na.rm=T) # rozstęp ćwiartkowy = 8.07625
+ skewness(Item_Weight, na.rm = T)# skośnośc wskazujen na to że wykres jest prawie symetryczny
+ kurtosis(Item_Weight, na.rm = T)# wykres spłaszczony
+ sd(Item_Weight)
+ elim.deter(Item_Weight)*sd(Item_Weight)
  
  
  ###Item Outlet sales
@@ -164,11 +174,12 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  TrainSet %>% ggplot(aes(x = Item_Outlet_Sales)) +
       geom_histogram(bins = 50, color = "blue")
  #podsumowanie
- summary(Item_Outlet_Sales)
- IQR(Item_Outlet_Sales)
- skewness(Item_Outlet_Sales, na.rm = T)
- kurtosis(Item_Outlet_Sales, na.rm = T)
-  
+ summary(Item_Outlet_Sales)# medniana = 1794.33, średnia = 2181.29 
+ IQR(Item_Outlet_Sales)#rozstęp ćwiartkowy = 2267.049
+ skewness(Item_Outlet_Sales, na.rm = T)# skośność = 1.177323, asymetria prawo stronna
+ kurtosis(Item_Outlet_Sales, na.rm = T)# kurtoza = 4.614225, wykres wysmukły
+ sd(Item_Outlet_Sales)
+ elim.deter(Item_Outlet_Sales)*sd( Item_Outlet_Sales)
  
  #data without outliers
  ##sposob z https://www.youtube.com/watch?v=6hRKlZ8D_mk
@@ -188,6 +199,9 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
   
  #podsumowanie
  summary(Item_Visibility_Without_Outliers)
+ sd(Item_Visibility_Without_Outliers)
+ elim.deter(Item_Visibility_Without_Outliers)*sd(Item_Visibility_Without_Outliers)
+ 
  
  #item outlet sales
  summary(Item_Outlet_Sales)
@@ -205,7 +219,8 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  
  #podsumowanie
  summary(Item_OUtlet_Sales_Without_Outliers)
- 
+ sd(Item_OUtlet_Sales_Without_Outliers)
+ elim.deter(Item_OUtlet_Sales_Without_Outliers)*sd( Item_OUtlet_Sales_Without_Outliers)
  
  #data_without_outliers
  #Grubbs test
