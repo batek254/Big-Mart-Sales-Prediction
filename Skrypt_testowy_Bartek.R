@@ -9,7 +9,7 @@ library(bnstruct)
 library(DMwR)
 library(VIM)
 library(outliers)
-
+library(gganimate)
 #==================================================================================
 #!!!!!!!!!!!!!!!!!!!!!!!UŻYĆ STAT_SUMMARY, GEOM_VIOLIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #==================================================================================
@@ -50,3 +50,6 @@ while(Grubbs_Item_Visibility_Testowy$p.value <= 0.05){
 
 #Ilość outliers
 nrow(TrainSet) - nrow(Testowy)
+
+#Wykresik animowany
+         
