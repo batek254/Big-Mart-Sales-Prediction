@@ -14,6 +14,16 @@ View(TestSet)
 Submission <- read_csv(paste(Path, "/Submission.csv", sep=""))
 View(Submission)
 attach(TrainSet)
+
+#Pytania:
+#1. CZemu rozbijasz data frame na pojedyncze wektory? np. w linijce table(Outlet_Establishment_Year, Outlet_Size).
+#Czemu tu jest samo Outlet_Establishment_Year, a nie TrainSet$Outlet_Establishment_Year? Za drugą metodą przemawiają
+#dwie kwestie, po pierwsze nie muszę odpalać całego skryptu by dobrać się do danych, po drugie w danych tych masz
+#również TestSet, gdzie kolumny nazywają się identycznie. Albo w linijce 40?
+#2. Wariancję można liczyć z metody var() (chodzi mi o tą funkcję z 33 linijki)
+#3. Do czego służy funkcja z 32 linijki? Widzę, że jest użyta w 144. Nie kojarzę tego wzoru.
+#Poza tym jest świetnie :D
+
 ###wykresy
 ######Dane ciągłe (ilościowe) w naszym secie to Item_Weight, Item_Visibility, Item_MRP, Item_Outlet_Sales (!ROK JEST DYSKRETNĄ!)
 
@@ -312,7 +322,6 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
    scale_x_discrete(labels = abbreviate)
  #wykres ilsoci powstalych sklepów, w danych latach, pogrupownych
  #wg lokalizacji,kolor oznacza wielkosc sklepu
- 
  
  #
  
