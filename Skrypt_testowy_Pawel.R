@@ -85,6 +85,12 @@ TrainSet %>% select(Outlet_Location_Type) %>% table() %>% as.data.frame() %>%
   ggplot(aes(x=., y= Freq))+geom_bar(stat ="identity", alpha= 0.6, color= 'green') +
   labs(x = 'Tier', y = "ilość")
 
+## wykres kolowy
+TrainSet %>% ggplot(aes(x = Outlet_Location_Type, fill = factor(Outlet_Location_Type))) + 
+  geom_histogram(stat="count") + 
+  coord_polar(theta = "x") + 
+  labs(x = "", y = "", fill = 'Lokalizacja sklepu')
+
 
 ##rozmiar
 
@@ -94,6 +100,11 @@ table(TrainSet$Outlet_Size)
 as.data.frame(table(TrainSet$Outlet_Size))->Outlet_Size_data_frame
 TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Outlet_Size))) + geom_bar(width = 1) + coord_polar(theta = "y")
 
+#jeszcze jeden wykres kołowy
+TrainSet %>% ggplot(aes(x = Outlet_Size, fill = factor(Outlet_Size))) + 
+  geom_histogram(stat="count") + 
+  coord_polar(theta = "x") + 
+  labs(x = "", y = "", fill = 'rozmiar')
 
 
 #wykres słupkowy
@@ -121,6 +132,12 @@ TrainSet %>% select(Outlet_Identifier) %>% table() %>% as.data.frame() %>%
 ggplot(aes(x=., y=Freq))+geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
   labs(x = 'Outlet', y = "występywanie")
 
+#jeszcze jeden wykres kołowy
+TrainSet %>% ggplot(aes(x = Outlet_Identifier, fill = factor(Outlet_Identifier))) + 
+  geom_histogram(stat="count") + 
+  coord_polar(theta = "x") + 
+  labs(x = "", y = "", fill = 'identyfikator sklepu')
+
 #podsumowanie
 summary(Outlet_Identifier_data_frame)
 
@@ -134,6 +151,12 @@ labs(x = 'tłuszcz', y = "występywanie")
 TrainSet %>% select(Item_Fat_Content) %>% table() %>% as.data.frame() %>% 
   ggplot( aes(x= . , y= Freq))+ geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
   labs(x = 'tłuszcz', y = "występywanie")  
+
+# wykres kołowy
+TrainSet %>% ggplot(aes(x = Item_Fat_Content, fill = factor(Item_Fat_Content))) + 
+  geom_histogram(stat="count") + 
+  coord_polar(theta = "x") + 
+  labs(x = "", y = "", fill = 'zawartość tłuszczu')
 
 
 summary(Item_Fat_Content_data_frame)
@@ -150,14 +173,15 @@ TrainSet %>% select(Outlet_Establishment_Year) %>% table() %>% as.data.frame() %
   ggplot (aes(x= ., y= Freq))+
   geom_bar(stat = 'identity')+
   labs(x= "rok powstania",y = "ilość")
+
+#wykres kołowy
+TrainSet %>% ggplot(aes(x = Outlet_Establishment_Year, fill = factor(Outlet_Establishment_Year))) + 
+  geom_histogram(stat="count") + 
+  coord_polar(theta = "x") + 
+  labs(x = "", y = "", fill = 'Typ produktu')
     
 #podsumowanie
 summary(Outlet_Establishment_Year_data_frame)
-
-## Identyfikator sklepu
-TrainSet %>% select(Outlet_Identifier)%>% table()%>% as.data.frame() %>%
-  ggplot(aes(x= ., y = Freq))+ geom_bar(stat = 'identity')
-
 
 ##widzialność produktu 
 
@@ -380,6 +404,12 @@ outliers_Iv %>% as.data.frame()%>%
   ggplot(aes (x=Outlet_Establishment_Year , y = Freq))+
    geom_point(aes(color = Outlet_Size), size =3)+
    facet_grid(.~ Outlet_Location_Type)
+  
+ #wykres kołowy przedstawiajacy wielkość sklepu i lokalizacje
+ TrainSet %>% ggplot(aes(x =Outlet_Location_Type  , fill = factor(Outlet_Size))) + 
+   geom_histogram(stat="count") + 
+   coord_polar(theta = "x") + 
+   labs(x = "", y = "", fill = 'wielkość sklepu')
    
    
  
