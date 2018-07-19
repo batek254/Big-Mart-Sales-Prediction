@@ -21,7 +21,7 @@ attach(TrainSet)
 #dwie kwestie, po pierwsze nie muszę odpalać całego skryptu by dobrać się do danych, po drugie w danych tych masz
 #również TestSet, gdzie kolumny nazywają się identycznie. Albo w linijce 40?
 #2. Wariancję można liczyć z metody var() (chodzi mi o tą funkcję z 33 linijki)
-#3. Do czego służy funkcja z 32 linijki? Widzę, że jest użyta w 144. Nie kojarzę tego wzoru.
+#3. Do czego służy funkcja z 32linijki? Widzę, że jest użyta w 144. Nie kojarzę tego wzoru.
 #Poza tym jest świetnie :D
 
 ###wykresy
@@ -80,6 +80,11 @@ ggplot(Outlet_Localisation_data_frame, aes(x= Var1 , y= Freq))+
   labs(x = 'Tier', y = "ilość")
 
 
+#wersja poprawiona
+TrainSet %>% select(Outlet_Location_Type) %>% table() %>% as.data.frame() %>% 
+  ggplot(aes(x=., y= Freq))+geom_bar(stat ="identity", alpha= 0.6, color= 'green') +
+  labs(x = 'Tier', y = "ilość")
+
 
 ##rozmiar
 
@@ -89,11 +94,17 @@ table(TrainSet$Outlet_Size)
 as.data.frame(table(TrainSet$Outlet_Size))->Outlet_Size_data_frame
 TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Outlet_Size))) + geom_bar(width = 1) + coord_polar(theta = "y")
 
+
+
 #wykres słupkowy
 ggplot(Outlet_Size_data_frame, aes(x= Var1 , y= Freq))+
     geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
        labs(x = 'wielkosc', y = "ilość")
 
+# poprawiony
+TrainSet %>% select(Outlet_Size) %>% table() %>% as.data.frame() %>% 
+ ggplot(aes(x=. , y= Freq))+ geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
+  labs(x = 'wielkosc', y = "ilość")
 
 ##identyfikator_sklepu
 
@@ -102,6 +113,12 @@ ggplot(Outlet_Size_data_frame, aes(x= Var1 , y= Freq))+
 as.data.frame(table(TrainSet$Outlet_Identifier))->Outlet_Identifier_data_frame
 ggplot(Outlet_Identifier_data_frame, aes(x= Var1 , y= Freq))+
   geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
+  labs(x = 'Outlet', y = "występywanie")
+
+#poprawiony
+
+TrainSet %>% select(Outlet_Identifier) %>% table() %>% as.data.frame() %>% 
+ggplot(aes(x=., y=Freq))+geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
   labs(x = 'Outlet', y = "występywanie")
 
 #podsumowanie
@@ -113,6 +130,12 @@ as.data.frame(table(Item_Fat_Content))->Item_Fat_Content_data_frame
 ggplot(Item_Fat_Content_data_frame, aes(x= Item_Fat_Content , y= Freq))+ geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
 labs(x = 'tłuszcz', y = "występywanie")
 
+#poprawiony
+TrainSet %>% select(Item_Fat_Content) %>% table() %>% as.data.frame() %>% 
+  ggplot( aes(x= . , y= Freq))+ geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
+  labs(x = 'tłuszcz', y = "występywanie")  
+
+
 summary(Item_Fat_Content_data_frame)
 
 
@@ -122,6 +145,12 @@ ggplot(Outlet_Establishment_Year_data_frame, aes(x= Outlet_Establishment_Year, y
   geom_bar(stat = 'identity')+
   labs(x= "rok powstania",y = "ilość")
 
+#poprawiony
+TrainSet %>% select(Outlet_Establishment_Year) %>% table() %>% as.data.frame() %>% 
+  ggplot (aes(x= ., y= Freq))+
+  geom_bar(stat = 'identity')+
+  labs(x= "rok powstania",y = "ilość")
+    
 #podsumowanie
 summary(Outlet_Establishment_Year_data_frame)
 
@@ -224,6 +253,10 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
         aes(x= Item_OUtlet_Sales_Without_Outliers))+
    geom_histogram(fill= "red", col ="black")
  
+ #z uzyciem dplyr
+ Item_OUtlet_Sales_Without_Outliers %>% as.data.frame() %>%
+   ggplot( aes (x=.))+geom_histogram(fill= "red", col ="black")
+ 
  length(Item_Outlet_Sales)
  length(Item_OUtlet_Sales_Without_Outliers)
  
@@ -252,6 +285,12 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  ggplot(as.data.frame(outliers_Iv),
              aes(x= outliers_Iv))+
       geom_histogram(fill= "red", col ="black")
+ 
+# z uzyciem dplyr 
+outliers_Iv %>% as.data.frame()%>%
+  ggplot(aes(x = .))+ 
+  geom_histogram(fill= "red", col ="black")
+
     
       summary(outliers_Iv)  
   
@@ -264,6 +303,12 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
         aes(x= outliers_IOS))+
  geom_histogram(fill= "red", col ="black")
  
+ #z uzyciem dplyr
+ outliers_IOS %>% as.data.frame()%>%
+   ggplot(aes(x=.))+
+   geom_histogram(fill= "red", col ="black")
+ 
+ 
  summary(outliers_IOS)  
  
  #mahalanobis 
@@ -274,6 +319,7 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  benchMD<- 2.2423+ 1.5*IQR(MD)
  IVS.d$outlier_maha <- "F"
  IVS.d$outlier_maha[IVS.d$MD > benchMD]<-"T"
+ IVS.d
  
  
  #Searching for outliers using Grubbs Test
@@ -320,6 +366,16 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  qplot(Outlet_Establishment_Year, Freq, color = Outlet_Size,
        data =a, size =4, facets = .~ Outlet_Location_Type)+
    scale_x_discrete(labels = abbreviate)
+ 
+ #poprawiony
+ TrainSet %>% select(Outlet_Establishment_Year, Outlet_Size, 
+  Outlet_Location_Type) %>% table() %>% as.data.frame()%>%
+  ggplot(aes (x=Outlet_Establishment_Year , y = Freq))+
+   geom_point(aes(color = Outlet_Size), size =3)+
+   facet_grid(.~ Outlet_Location_Type)
+   
+   
+ 
  #wykres ilsoci powstalych sklepów, w danych latach, pogrupownych
  #wg lokalizacji,kolor oznacza wielkosc sklepu
  
