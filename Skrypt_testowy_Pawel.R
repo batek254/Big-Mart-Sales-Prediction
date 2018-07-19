@@ -154,6 +154,9 @@ TrainSet %>% select(Outlet_Establishment_Year) %>% table() %>% as.data.frame() %
 #podsumowanie
 summary(Outlet_Establishment_Year_data_frame)
 
+## Identyfikator sklepu
+TrainSet %>% select(Outlet_Identifier)%>% table()%>% as.data.frame() %>%
+  ggplot(aes(x= ., y = Freq))+ geom_bar(stat = 'identity')
 
 
 ##widzialność produktu 
@@ -219,6 +222,10 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  kurtosis(Item_Outlet_Sales, na.rm = T)# kurtoza = 4.614225, wykres wysmukły
  sd(Item_Outlet_Sales)
  elim.deter(Item_Outlet_Sales)*sd( Item_Outlet_Sales)
+ 
+ 
+ 
+ 
  
  #data without outliers
  ##sposob z https://www.youtube.com/watch?v=6hRKlZ8D_mk
@@ -379,7 +386,16 @@ outliers_Iv %>% as.data.frame()%>%
  #wykres ilsoci powstalych sklepów, w danych latach, pogrupownych
  #wg lokalizacji,kolor oznacza wielkosc sklepu
  
- #
+ 
+ #wykres wystepowania sklepow o danym identyfiktorze w danej lokalizacji
+ TrainSet %>% select(Outlet_Identifier, Outlet_Location_Type)%>% table() %>% as.data.frame()%>%
+     ggplot(aes ( Outlet_Identifier, Freq))+geom_point(aes (size = 3))+ facet_grid(.~ Outlet_Location_Type)+
+   scale_x_discrete(labels = abbreviate)
+
+ 
+ 
+ 
+ 
  
  
  
