@@ -52,4 +52,5 @@ while(Grubbs_Item_Visibility_Testowy$p.value <= 0.05){
 nrow(TrainSet) - nrow(Testowy)
 
 #Wykresik animowany
-         
+
+TrainSet %>% select(Item_Outlet_Sales, Outlet_Size) %>% ggplot(aes(x = Outlet_Size, y = Item_Outlet_Sales, fill = Outlet_Size)) + geom_violin()
