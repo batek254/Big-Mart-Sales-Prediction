@@ -135,3 +135,38 @@ TrainSet %>% ggplot(aes(x = factor(1), fill = factor(Outlet_Type))) +
 
 #Wykres gęstości wagi przedmiotu
 TrainSet %>% ggplot(aes(x = Item_Weight)) + geom_density()
+
+#Wykres korelacji
+#Musimy wybrać tylko zmienne ciągłe 
+TrainSet %>% 
+  select(Item_Weight, Item_Visibility, Item_MRP) %>% 
+  cor()
+
+#Praktycznie zerowa korelacja między zmiennymi, co nie przez nas pożądane.
+
+#Bardzo ciekawy rodzaj wykresu violin (coś jak boxplot), aktulanie jest bardzo popularny. Proponowałbym by go użyć.
+#Wykres violin, na osi x Item_Type, na y Item_Weight, a gridy to Item_Fat_Content.
+TrainSet %>% 
+  ggplot(aes(x = Item_Type, y = Item_Weight, fill = Item_Type)) + 
+  geom_violin() +
+  facet_grid(rows = vars(Item_Fat_Content)) +
+  guides(fill = F) +
+  scale_x_discrete(labels = abbreviate)
+
+#Wykres violin, na osi x Item_Type, na y Item_Visibility, a gridy to Item_Fat_Content.
+TrainSet %>% 
+  ggplot(aes(x = Item_Type, y = Item_Visibility, fill = Item_Type)) + 
+  geom_violin() +
+  facet_grid(rows = vars(Item_Fat_Content)) +
+  guides(fill = F) +
+  scale_x_discrete(labels = abbreviate)
+
+#Wykres violin, na osi x Item_Type, na y Item_MRP, a gridy to Item_Fat_Content.
+TrainSet %>% 
+  ggplot(aes(x = Item_Type, y = Item_MRP, fill = Item_Type)) + 
+  geom_violin() +
+  facet_grid(rows = vars(Item_Fat_Content)) +
+  guides(fill = F) +
+  scale_x_discrete(labels = abbreviate)
+
+#TUTAJ WRZUCI SIĘ WIĘCEJ VIOLIN
