@@ -424,10 +424,10 @@ outliers_Iv %>% as.data.frame()%>%
 
  
  
+ #######################korelacje #############################
  
- 
- 
- 
+ ##dane liczbowe
+  TrainSet %>% select(Item_Weight, Item_Visibility, Item_MRP, Item_Outlet_Sales) %>% cor %>% corrplot 
  
  
  
