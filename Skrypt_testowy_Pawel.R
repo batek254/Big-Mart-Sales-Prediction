@@ -430,5 +430,17 @@ outliers_Iv %>% as.data.frame()%>%
   TrainSet %>% select(Item_Weight, Item_Visibility, Item_MRP, Item_Outlet_Sales) %>% cor %>% corrplot 
  
  
+ ## tansfirmacja danych
+ 
+  ## logrytm , sqrt
+ # item visibility
+ TrainSet %>% select(Item_Visibility) %>% summary() # dane bez transformacji
+ TrainSet %>% select(Item_Visibility) %>% +1 %>% log %>% summary() #dane po transformacji logarytmincznej( 1 dodana by uniknac inf )
+  TrainSet %>% ggplot(aes(x = log(Item_Visibility+1)))+ geom_histogram() # wykres po transformacji log
+  TrainSet %>% ggplot(aes(x= sqrt(Item_Visibility)))+ geom_histogram() # wykres po transormacji pierwiastkowej
+   
+  ## czy te transformacje sa wlasciwe ?
+ 
+ 
  
  
