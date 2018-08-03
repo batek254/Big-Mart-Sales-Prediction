@@ -1,0 +1,40 @@
+---
+title: "Untitled"
+author: "Pawel"
+date: "3 sierpnia 2018"
+output: html_document
+---
+
+#Introduction
+
+###Puropose
+
+ The purpose of this work is to examin data from sales in USA, and conduct some economics research in order to find some patterns and dependences among the variables. This dependences will allow us depict models and conclusions.
+
+
+```{r}
+
+
+Path <- getwd()
+
+
+TrainSet <- read.csv(paste(Path, "/Train.csv", sep=""))
+
+TestSet <- read.csv(paste(Path, "/Test.csv", sep=""))
+
+Submission <- read.csv(paste(Path, "/Submission.csv", sep=""))
+
+
+```
+
+
+###data
+Our data cames from observation of sales in Usa, which were published as dataset in the platform Kaggle. This dataset contains 12 kinds of data:
+
+```{r}
+colnames(TrainSet)
+```
+
+As we can see we have quite data to analise, and for our convinince, and clarity in reception, some packages will be used :
+
+```{r}
