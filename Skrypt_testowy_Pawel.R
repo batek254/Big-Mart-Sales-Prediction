@@ -2,6 +2,12 @@
 library(readr)
 library(e1071)
 library(moments)
+require(class)
+require(bnstruct)
+require(DMwR)
+require(VIM)
+require(outliers)
+require(lsr)
 
 ###Sciezka
 Path <- getwd()
@@ -439,8 +445,44 @@ outliers_Iv %>% as.data.frame()%>%
   TrainSet %>% ggplot(aes(x = log(Item_Visibility+1)))+ geom_histogram() # wykres po transformacji log
   TrainSet %>% ggplot(aes(x= sqrt(Item_Visibility)))+ geom_histogram() # wykres po transormacji pierwiastkowej
    
-  ## czy te transformacje sa wlasciwe ?
+  ## czy te transformacje sa wlasciwe ? 
+  
+  # item weight
+  TrainSet %>% select(Item_Weight)%>% +1 %>% log %>% summary()
+  TrainSet %>% ggplot(aes(x = log(Item_Weight+1)))+ geom_histogram()
+TrainSet %>% ggplot(aes (x= sqrt(Item_Weight)))+ geom_histogram()
+
+# item Mpr
+TrainSet %>% ggplot(aes (x = log(Item_MRP+1)))+ geom_histogram()
+TrainSet %>% ggplot(aes (x = sqrt(Item_MRP)))+ geom_histogram()
+
+# item outlet sales
+TrainSet %>% ggplot(aes (x= log (Item_Outlet_Sales+1)))+ geom_histogram()
+TrainSet %>% ggplot(aes (x= sqrt(Item_Outlet_Sales)))+ geom_histogram() 
+
+#corr
+TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales)%>% +1 %>% log %>% cor()
+TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales) %>% sqrt %>% cor()
+
+### dane dyskretne
+TrainSet %>% select(Outlet_Size, Item_Type) %>% table() %>% chisq.test() # korelacja
+TrainSet %>% select(Outlet_Size, Item_Type) %>% table() %>% cramersV() # korelacja pomiedzy wielkoscia sklepu a typem przedmiotu
+
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Size) %>% table %>% chisq.test()
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Size) %>% table %>% cramersV() # korelacja miedzy wielkoscia a lokalizacja
+
+ TrainSet %>% select(Outlet_Location_Type, Item_Type) %>% table %>% chisq.test()
+ TrainSet %>% select(Outlet_Location_Type, Item_Type) %>% table %>% cramersV() # korelacje miedzy lokalizacja a typem przedmiotu
+
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Type) %>% table %>% chisq.test()
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Type) %>% table %>% cramersV() #korelacje miedzy lokazlizacja a typem sklepu
  
+  TrainSet %>% select(Outlet_Location_Type, Outlet_Identifier) %>% table %>% chisq.test()
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Identifier) %>% table %>% cramersV() #korelacja miedzy lokalizacja a identyfikatorem skleu
  
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Establishment_Year) %>% table %>% chisq.out.test()
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Establishment_Year) %>% table %>% cramersV()# cor miedzy lokalizacja a data powstania
  
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Identifier) %>% table %>% chisq.out.test()
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Identifier) %>% table %>% cramersV()#cor pomiedzy lokalizacja a identyfikatorem
  
