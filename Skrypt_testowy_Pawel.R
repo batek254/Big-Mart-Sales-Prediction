@@ -8,6 +8,7 @@ require(DMwR)
 require(VIM)
 require(outliers)
 require(lsr)
+require(GGally)
 
 ###Sciezka
 Path <- getwd()
@@ -485,4 +486,29 @@ TrainSet %>% select(Outlet_Size, Item_Type) %>% table() %>% cramersV() # korelac
  
  TrainSet %>% select(Outlet_Location_Type, Outlet_Identifier) %>% table %>% chisq.out.test()
  TrainSet %>% select(Outlet_Location_Type, Outlet_Identifier) %>% table %>% cramersV()#cor pomiedzy lokalizacja a identyfikatorem
+ 
+ TrainSet %>% select(Outlet_Location_Type, Item_Fat_Content) %>% table %>% chisq.out.test()
+ TrainSet %>% select(Outlet_Location_Type, Item_Fat_Content) %>% table %>% cramersV()
+ 
+ TrainSet %>% select(Item_Type, Outlet_Establishment_Year) %>% table %>% chisq.out.test()
+ TrainSet %>% select(Item_Type, Outlet_Establishment_Year) %>% table %>% cramersV()
+ 
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Establishment_Year) %>% table %>% chisq.out.test()
+ TrainSet %>% select(Outlet_Location_Type, Outlet_Establishment_Year) %>% table %>% cramersV() # to jest dosc ciekawe
+ 
+ TrainSet %>% select(Outlet_Type, Item_Type) %>% table %>% chisq.out.test()
+ TrainSet %>% select(Outlet_Type, Item_Type) %>% table %>% cramersV()
+ 
+ TrainSet %>% select(Outlet_Establishment_Year, Outlet_Size) %>% table %>% chisq.out.test()
+ TrainSet %>% select(Outlet_Establishment_Year, Outlet_Size) %>% table %>% cramersV() 
+ 
+ TrainSet %>% select(Outlet_Establishment_Year, Outlet_Type) %>% table %>% chisq.out.test()
+ TrainSet %>% select(Outlet_Establishment_Year, Outlet_Type) %>% table %>% cramersV() # dosc spora zaleznosc
+ 
+ TrainSet %>% select(Outlet_Size, Outlet_Type) %>% table %>% chisq.out.test()
+ TrainSet %>% select(Outlet_Size, Outlet_Type) %>% table %>% cramersV()
+ 
+ ## proba korelacji wielorakiej
+ TrainSet %>% select(4,6,12) %>% ggpairs()
+ 
  
