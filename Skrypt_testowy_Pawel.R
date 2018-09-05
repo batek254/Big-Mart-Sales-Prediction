@@ -466,6 +466,7 @@ TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales)%
 TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales) %>% sqrt %>% cor()
 
 ### dane dyskretne
+
 TrainSet %>% select(Outlet_Size, Item_Type) %>% table() %>% chisq.test() # korelacja
 TrainSet %>% select(Outlet_Size, Item_Type) %>% table() %>% cramersV() # korelacja pomiedzy wielkoscia sklepu a typem przedmiotu
 
@@ -508,7 +509,16 @@ TrainSet %>% select(Outlet_Size, Item_Type) %>% table() %>% cramersV() # korelac
  TrainSet %>% select(Outlet_Size, Outlet_Type) %>% table %>% chisq.out.test()
  TrainSet %>% select(Outlet_Size, Outlet_Type) %>% table %>% cramersV()
  
- ## proba korelacji wielorakiej
+ 
+ ## proba korelacji wielorakiej danych liczbowych
+ 
  TrainSet %>% select(4,6,12) %>% ggpairs()
+
+ TrainSet %>% select(4,6,12) %>% cor %>% as.matrix() -> tablica_cor
+ wsp <- c(tablica_cor[2], tablica_cor[3],tablica_cor[6])
+ sqrt((wsp[1]^2+wsp[2]^2-2*wsp[1]*wsp[2]*wsp[3])/(1-(wsp[3])^2)) #korelacja miedzy wieloraka pomiedzy zmiennymi
+ 
+ ##korelacje cząstkowe
+ 
  
  
