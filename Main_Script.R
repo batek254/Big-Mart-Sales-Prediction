@@ -14,11 +14,11 @@ require("purrr")
 Path <- getwd()
 
 #Wczytanie danych
-TrainSet <- read_csv(paste(Path, "/Train.csv", sep=""))
+TrainSet <- read.csv(paste(Path, "/Train.csv", sep=""))
 View(TrainSet)
-TestSet <- read_csv(paste(Path, "/Test.csv", sep=""))
+TestSet <- read.csv(paste(Path, "/Test.csv", sep=""))
 View(TestSet)
-Submission <- read_csv(paste(Path, "/Submission.csv", sep=""))
+Submission <- read.csv(paste(Path, "/Submission.csv", sep=""))
 View(Submission)
 
 glimpse(TrainSet)
@@ -82,6 +82,12 @@ anyNA(TrainSet)
 TrainSet$Item_Fat_Content[which(TrainSet$Item_Fat_Content == "LF")] <- "Low Fat"
 TrainSet$Item_Fat_Content[which(TrainSet$Item_Fat_Content == "low fat")] <- "Low Fat"
 TrainSet$Item_Fat_Content[which(TrainSet$Item_Fat_Content == "reg")] <- "Regular"
+
+#Analiza opisowa (napisałaś kawał przydatnego kodu, więc gdybyś mógł, to proszę byś swój skrypt testowy uporządkował
+#następująco: analiza opisowa i potem wykresy, bo jednak trochę się w tym gubię xD, a nie chcę czegoś pominąć)
+
+TrainSet %>% 
+  summary()
 
 #Wykresy
 

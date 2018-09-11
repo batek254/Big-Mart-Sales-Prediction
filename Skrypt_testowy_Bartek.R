@@ -16,9 +16,9 @@ library(gganimate)
 
 Path <- getwd()
 
-TrainSet <- read_csv(paste(Path, "/Train.csv", sep=""))
-TestSet <- read_csv(paste(Path, "/Test.csv", sep=""))
-Submission <- read_csv(paste(Path, "/Submission.csv", sep=""))
+TrainSet <- read.csv(paste(Path, "/Train.csv", sep=""))
+TestSet <- read.csv(paste(Path, "/Test.csv", sep=""))
+Submission <- read.csv(paste(Path, "/Submission.csv", sep=""))
 
 TrainSet %>% select(Outlet_Size) %>% is.na() %>% sum()
 table(TrainSet$Outlet_Size)
@@ -54,3 +54,9 @@ nrow(TrainSet) - nrow(Testowy)
 #Wykresik animowany
 
 TrainSet %>% select(Item_Outlet_Sales, Outlet_Size) %>% ggplot(aes(x = Outlet_Size, y = Item_Outlet_Sales, fill = Outlet_Size)) + geom_violin()
+
+#Sprawdzenie danych w związku z niepewnością co do ich rodzaju
+typeof(TrainSet)
+summary(TrainSet)
+#Zauważyłem bardzo ciekawą sprawę. Mianowicie funkcja read.csv inaczej czyta dane niż read_csv. Po funkcji summary widać,
+#że bardziej pasuje nam read.csv, więc zmieniłem to w każdym skrypcie

@@ -1,30 +1,57 @@
 ---
 title: "Big Mart Sales"
-author: "Bartłomiej Fatyga, Paweł Klimczyk"
+author: "BartÄąâ€šomiej Fatyga, PaweÄąâ€š Klimczyk"
 date: "1 sierpnia 2018"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Zdecydujmy, czy piszemy po angielsku, czy po polsku (lepiej jednak po angielsku)
+## Buidling regression models using Big Mart Sales Prediction data.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+JAKIŚ TEKST WPROWADZAJĄCY (KRÓTKI OPIS DANYCH I NA CZYM PROJEKT POLEGA) !!!NA PÓŹNIEJ!!!
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+### Loading Packages ???and data???(ładuję pakiety i nie wyświetlam warnings, na razie tylko z main_script, tu jeszcze musimy pogadać o ładowaniu danych)
 
-```{r cars}
-summary(cars)
+```{r, include=FALSE}
+require(readr)
+require(dplyr)
+require(ggplot2)
+require(corrplot)
+require(tidyr)
+require(purrr)
 ```
 
-## Including Plots
+```{r, echo=FALSE}
+#Na razie ładuję tu data, wraz z czyszczeniem
+#Sciezka
+Path <- getwd()
 
-You can also embed plots, for example:
+#Wczytanie danych
+TrainSet <- read.csv(paste(Path, "/Train.csv", sep=""))
+TestSet <- read.csv(paste(Path, "/Test.csv", sep=""))
+Submission <- read.csv(paste(Path, "/Submission.csv", sep=""))
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+TrainSet$Item_Weight[which(is.na(TrainSet$Item_Weight))] <- mean(TrainSet$Item_Weight, na.rm = T)
+
+TrainSet <- na.omit(TrainSet)
+
+TrainSet$Item_Fat_Content[which(TrainSet$Item_Fat_Content == "LF")] <- "Low Fat"
+TrainSet$Item_Fat_Content[which(TrainSet$Item_Fat_Content == "low fat")] <- "Low Fat"
+TrainSet$Item_Fat_Content[which(TrainSet$Item_Fat_Content == "reg")] <- "Regular"
+```
+## Exploratory Analysis
+
+### Summary of Data
+```{r, echo=TRUE}
+TrainSet %>%
+  summary()
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### Data Visualizations
+
+Zdecydujmy teraz jakie wykresy tu wrzucimy, bo już nadszedł czas. Wtedy zobaczymy czego nam jeszcze brakuje. Może robimy to przez ankietę, ale trzeba poczekać na Mikołaja.

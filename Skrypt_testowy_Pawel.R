@@ -14,11 +14,11 @@ require(GGally)
 Path <- getwd()
 
 ##Wczytanie danych
-TrainSet <- read_csv(paste(Path, "/Train.csv", sep=""))
+TrainSet <- read.csv(paste(Path, "/Train.csv", sep=""))
 View(TrainSet)
-TestSet <- read_csv(paste(Path, "/Test.csv", sep=""))
+TestSet <- read.csv(paste(Path, "/Test.csv", sep=""))
 View(TestSet)
-Submission <- read_csv(paste(Path, "/Submission.csv", sep=""))
+Submission <- read.csv(paste(Path, "/Submission.csv", sep=""))
 View(Submission)
 attach(TrainSet)
 
