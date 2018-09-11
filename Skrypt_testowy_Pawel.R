@@ -428,9 +428,40 @@ outliers_Iv %>% as.data.frame()%>%
  TrainSet %>% select(Outlet_Identifier, Outlet_Location_Type)%>% table() %>% as.data.frame()%>%
      ggplot(aes ( Outlet_Identifier, Freq))+geom_point(aes (size = 3))+ facet_grid(.~ Outlet_Location_Type)+
    scale_x_discrete(labels = abbreviate)
+ 
+  #####wykresy wielkosci sprzedazy
 
  
+ #wyrkes sprzedazy przedmoiotow wg identyfikatora sklepu
+ TrainSet %>% select(Item_Outlet_Sales,Outlet_Identifier) %>%
+   ggplot(aes(x= Item_Outlet_Sales, 
+              fill= Outlet_Identifier))+ 
+   geom_histogram(binwidth = 300)+
+   facet_wrap(~Outlet_Identifier)
  
+ #wykres sprzedazy wg lokalizacji sklepu
+ TrainSet %>% select(Item_Outlet_Sales, Outlet_Location_Type) %>%
+   ggplot(aes(x = Item_Outlet_Sales, fill= Outlet_Location_Type))+
+ geom_histogram(binwidth = 300)+
+   facet_wrap(~Outlet_Location_Type)
+ 
+ #wykres sprzedazy wg wielkosci sklepu
+ TrainSet %>% select(Item_Outlet_Sales, Outlet_Size) %>%
+   ggplot(aes(x = Item_Outlet_Sales, fill= Outlet_Size))+
+ geom_histogram(binwidth = 300)+
+   facet_wrap(~Outlet_Size)
+ 
+ #wykres sprzedazy wg typu sklepu
+ TrainSet %>% select(Item_Outlet_Sales, Outlet_Size) %>%
+   ggplot(aes(x = Item_Outlet_Sales, fill= Outlet_Size))+
+ geom_histogram(binwidth = 300)+
+   facet_wrap(~Outlet_Size)
+ 
+ #wykres sprzedazy wg roku zalozenia
+ TrainSet %>% select(Item_Outlet_Sales, Outlet_Establishment_Year) %>%
+      ggplot(aes(x = Item_Outlet_Sales, fill= Outlet_Establishment_Year))+
+   geom_histogram(binwidth = 300)+
+    facet_wrap(~Outlet_Establishment_Year)
  #######################korelacje #############################
  
  ##dane liczbowe
