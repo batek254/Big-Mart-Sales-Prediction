@@ -430,7 +430,8 @@ outliers_Iv %>% as.data.frame()%>%
    scale_x_discrete(labels = abbreviate)
  
   #####wykresy wielkosci sprzedazy
-
+  
+   #histogramy
  
  #wyrkes sprzedazy przedmoiotow wg identyfikatora sklepu
  TrainSet %>% select(Item_Outlet_Sales,Outlet_Identifier) %>%
@@ -452,16 +453,115 @@ outliers_Iv %>% as.data.frame()%>%
    facet_wrap(~Outlet_Size)
  
  #wykres sprzedazy wg typu sklepu
- TrainSet %>% select(Item_Outlet_Sales, Outlet_Size) %>%
-   ggplot(aes(x = Item_Outlet_Sales, fill= Outlet_Size))+
+ TrainSet %>% select(Item_Outlet_Sales, Outlet_Type) %>%
+   ggplot(aes(x = Item_Outlet_Sales, fill= Outlet_Type))+
  geom_histogram(binwidth = 300)+
-   facet_wrap(~Outlet_Size)
+   facet_wrap(~Outlet_Type)
  
  #wykres sprzedazy wg roku zalozenia
  TrainSet %>% select(Item_Outlet_Sales, Outlet_Establishment_Year) %>%
       ggplot(aes(x = Item_Outlet_Sales, fill= Outlet_Establishment_Year))+
    geom_histogram(binwidth = 300)+
     facet_wrap(~Outlet_Establishment_Year)
+ 
+ 
+ ####box ploty#####
+ #wyrkes sprzedazy przedmoiotow wg identyfikatora sklepu
+ TrainSet %>% select(Item_Outlet_Sales,Outlet_Identifier) %>%
+   ggplot(aes(y= Item_Outlet_Sales, 
+              x= Outlet_Identifier))+ 
+   geom_boxplot()
+ 
+ #wykres sprzedazy wg lokalizacji sklepu
+ TrainSet %>% select(Item_Outlet_Sales, Outlet_Location_Type) %>%
+   ggplot(aes(y = Item_Outlet_Sales, x= Outlet_Location_Type))+
+  geom_boxplot()
+ 
+ #wykres sprzedazy wg wielkosci sklepu
+ TrainSet %>% select(Item_Outlet_Sales, Outlet_Size) %>%
+   ggplot(aes(y= Item_Outlet_Sales, x= Outlet_Size))+
+  geom_boxplot()
+ 
+ #wykres sprzedazy wg typu sklepu
+ TrainSet %>% select(Item_Outlet_Sales, Outlet_Type) %>%
+   ggplot(aes(y = Item_Outlet_Sales, x = Outlet_Type))+
+  geom_boxplot()
+ 
+ #wykres sprzedazy wg roku zalozenia
+ TrainSet %>% select(Item_Outlet_Sales, Outlet_Establishment_Year) %>%
+   ggplot(aes(y = Item_Outlet_Sales, x= Outlet_Establishment_Year))+
+  geom_boxplot()+ facet_wrap( ~Outlet_Establishment_Year)
+ 
+ 
+ 
+ ###wykresy sprzedazy i MPR pogrupowane wg kryteriów:###
+ 
+ #Outlet_Identifire
+ TrainSet %>% select(Item_Outlet_Sales, Item_MRP, Outlet_Identifier) %>%
+   ggplot(aes(x= Item_MRP, y= Item_Outlet_Sales))+
+   geom_bin2d()+ facet_wrap( ~ Outlet_Identifier)
+ 
+ #outlet_Location_Type
+ TrainSet %>% select(Item_Outlet_Sales, Item_MRP, Outlet_Location_Type) %>%
+   ggplot(aes(x= Item_MRP, y= Item_Outlet_Sales))+
+   geom_point()+ facet_wrap( ~ Outlet_Location_Type)
+ 
+ #Outlet_Size
+ TrainSet %>% select(Item_Outlet_Sales, Item_MRP, Outlet_Size) %>%
+   ggplot(aes(x= Item_MRP, y= Item_Outlet_Sales))+
+   geom_bin2d()+ facet_wrap( ~ Outlet_Size)
+ 
+ #outlet_estabilshment_year
+ TrainSet %>% select(Item_Outlet_Sales, Item_MRP, Outlet_Establishment_Year) %>%
+   ggplot(aes(x= Item_MRP, y= Item_Outlet_Sales))+
+   geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
+ 
+ 
+ ###wykresy sprzedazy i widzlanosci pogrupowane wg kryteriów:###    
+
+ #Outlet_Identifire
+ TrainSet %>% select(Item_Outlet_Sales, Item_Visibility, Outlet_Identifier) %>%
+   ggplot(aes(x= Item_Visibility, y= Item_Outlet_Sales))+
+   geom_bin2d()+ facet_wrap( ~ Outlet_Identifier)
+ 
+ #outlet_Location_Type
+ TrainSet %>% select(Item_Outlet_Sales, Item_Visibility, Outlet_Location_Type) %>%
+   ggplot(aes(x= Item_Visibility, y= Item_Outlet_Sales))+
+   geom_point()+ facet_wrap( ~ Outlet_Location_Type)
+ 
+ #Outlet_Size
+ TrainSet %>% select(Item_Outlet_Sales, Item_Visibility, Outlet_Size) %>%
+   ggplot(aes(x= Item_Visibility, y= Item_Outlet_Sales))+
+   geom_bin2d()+ facet_wrap( ~ Outlet_Size)
+ 
+ #outlet_estabilshment_year
+ TrainSet %>% select(Item_Outlet_Sales, Item_Visibility, Outlet_Establishment_Year) %>%
+   ggplot(aes(x= Item_Visibility, y= Item_Outlet_Sales))+
+   geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
+ 
+ ###wykresy MPR i widzlanosci pogrupowane wg kryteriów:### 
+ 
+ #Outlet_Identifire
+ TrainSet %>% select(Item_MRP, Item_Visibility, Outlet_Identifier) %>%
+   ggplot(aes(x= Item_Visibility, y= Item_MRP))+
+   geom_bin2d()+ facet_wrap( ~ Outlet_MPR)
+ 
+ #outlet_Location_Type
+ TrainSet %>% select(Item_MRP, Item_Visibility, Outlet_Location_Type) %>%
+   ggplot(aes(x= Item_Visibility, y= Item_MRP))+
+   geom_point()+ facet_wrap( ~ Outlet_Location_Type)
+ 
+ #Outlet_Size
+ TrainSet %>% select(Item_MRP, Item_Visibility, Outlet_Size) %>%
+   ggplot(aes(x= Item_Visibility, y= Item_MRP))+
+   geom_bin2d()+ facet_wrap( ~ Outlet_Size)
+ 
+ #outlet_estabilshment_year
+ TrainSet %>% select(Item_MRP, Item_Visibility, Outlet_Establishment_Year) %>%
+   ggplot(aes(x= Item_Visibility, y= Item_MRP))+
+   geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
+ 
+ 
  #######################korelacje #############################
  
  ##dane liczbowe
