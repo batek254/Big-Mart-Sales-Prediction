@@ -596,6 +596,47 @@ TrainSet %>% ggplot(aes (x= sqrt(Item_Outlet_Sales)))+ geom_histogram()
 TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales)%>% +1 %>% log %>% cor()
 TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales) %>% sqrt %>% cor()
 
+
+#wykresy MPR I sales po transf
+
+#log
+
+#Outlet_Identifire
+
+TrainSet %>%  ggplot(aes(x= log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+
+  geom_bin2d()+facet_wrap(~ Outlet_Identifier)
+
+#outlet_Location_Type
+TrainSet %>% ggplot( aes(x = log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+ 
+  geom_point()+ facet_wrap( ~ Outlet_Location_Type)
+
+#Outlet_Size
+TrainSet %>% ggplot(aes(x= log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+
+  geom_bin2d()+ facet_wrap( ~ Outlet_Size)
+
+#outlet_estabilshment_year
+TrainSet %>%ggplot(aes(x= log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+
+  geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
+
+#sqrt
+#Outlet_Identifire
+
+TrainSet %>%  ggplot(aes(x= sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+
+  geom_bin2d()+facet_wrap(~ Outlet_Identifier)
+
+#outlet_Location_Type
+TrainSet %>% ggplot( aes(x = sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+ 
+  geom_point()+ facet_wrap( ~ Outlet_Location_Type)
+
+#Outlet_Size
+TrainSet %>% ggplot(aes(x= sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+
+  geom_bin2d()+ facet_wrap( ~ Outlet_Size)
+
+#outlet_estabilshment_year
+TrainSet %>%ggplot(aes(x= sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+
+  geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
+
+  
 ### dane dyskretne
 
 TrainSet %>% select(Outlet_Size, Item_Type) %>% table() %>% chisq.test() # korelacja
