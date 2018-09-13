@@ -41,7 +41,7 @@ elim.deter<- function(x){((length(x)-1)/length(x))}
 var.wd <- function(x){ sum((x-mean(x))^2)/length(x)}
 
 
-#wykres
+#wykres #mysle że z tych mozemy brac po jednym, jako wstep do danych
 
 table(TrainSet$Item_Type)
 as.data.frame(table(TrainSet$Item_Type))-> Typ_produktu_data_frame
@@ -49,7 +49,7 @@ ggplot(data = Typ_produktu_data_frame, aes(x= Var1, y= Freq, group = 1))+
   geom_bar(stat= 'identity',color = 'blue')+ labs(x= "produkt", y= 'częstosc zakupu')+
   scale_x_discrete(labels = abbreviate)
 
-###boxplot
+###boxplot 
 
 #item visibility
  TrainSet %>% ggplot(aes(x= "box_plot_item_visibility",y= Item_Visibility))+geom_boxplot()
@@ -258,7 +258,7 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  
  
  
- #data without outliers
+ #data without outliers # 
  ##sposob z https://www.youtube.com/watch?v=6hRKlZ8D_mk
  
  #item visibility
@@ -412,7 +412,7 @@ outliers_Iv %>% as.data.frame()%>%
    geom_point(aes(color = Outlet_Size), size =3)+
    facet_grid(.~ Outlet_Location_Type)
   
- #wykres kołowy przedstawiajacy wielkość sklepu i lokalizacje
+ #wykres kołowy przedstawiajacy wielkość sklepu i lokalizacje #moze ten
  TrainSet %>% ggplot(aes(x =Outlet_Location_Type  , fill = factor(Outlet_Size))) + 
    geom_histogram(stat="count") + 
    coord_polar(theta = "x") + 
@@ -429,9 +429,9 @@ outliers_Iv %>% as.data.frame()%>%
      ggplot(aes ( Outlet_Identifier, Freq))+geom_point(aes (size = 3))+ facet_grid(.~ Outlet_Location_Type)+
    scale_x_discrete(labels = abbreviate)
  
-  #####wykresy wielkosci sprzedazy
+  #####wykresy wielkosci sprzedazy # warto by sie nad tym zastnowic#
   
-   #histogramy
+   #histogramy 
  
  #wyrkes sprzedazy przedmoiotow wg identyfikatora sklepu
  TrainSet %>% select(Item_Outlet_Sales,Outlet_Identifier) %>%
@@ -465,7 +465,7 @@ outliers_Iv %>% as.data.frame()%>%
     facet_wrap(~Outlet_Establishment_Year)
  
  
- ####box ploty#####
+ ####box ploty##### te tez
  #wyrkes sprzedazy przedmoiotow wg identyfikatora sklepu
  TrainSet %>% select(Item_Outlet_Sales,Outlet_Identifier) %>%
    ggplot(aes(y= Item_Outlet_Sales, 
@@ -494,7 +494,8 @@ outliers_Iv %>% as.data.frame()%>%
  
  
  
- ###wykresy sprzedazy i MPR pogrupowane wg kryteriów:###
+ ###wykresy sprzedazy i MPR pogrupowane wg kryteriów:### te wykresy by wrzucil
+ 
  
  #Outlet_Identifire
  TrainSet %>% select(Item_Outlet_Sales, Item_MRP, Outlet_Identifier) %>%
@@ -517,7 +518,7 @@ outliers_Iv %>% as.data.frame()%>%
    geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
  
  
- ###wykresy sprzedazy i widzlanosci pogrupowane wg kryteriów:###    
+ ###wykresy sprzedazy i widzlanosci pogrupowane wg kryteriów:###    te wykresy bym wrzucil
 
  #Outlet_Identifire
  TrainSet %>% select(Item_Outlet_Sales, Item_Visibility, Outlet_Identifier) %>%
@@ -539,7 +540,8 @@ outliers_Iv %>% as.data.frame()%>%
    ggplot(aes(x= Item_Visibility, y= Item_Outlet_Sales))+
    geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
  
- ###wykresy MPR i widzlanosci pogrupowane wg kryteriów:### 
+ ###wykresy MPR i widzlanosci pogrupowane wg kryteriów:### te wykresy bym wrzucil
+
  
  #Outlet_Identifire
  TrainSet %>% select(Item_MRP, Item_Visibility, Outlet_Identifier) %>%
