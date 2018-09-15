@@ -34,69 +34,104 @@ attach(TrainSet)
 ###wykresy
 ######Dane ciągłe (ilościowe) w naszym secie to Item_Weight, Item_Visibility, Item_MRP, Item_Outlet_Sales (!ROK JEST DYSKRETNĄ!)
 
+
+##### z uwagi na dużą probę przyjmujemy założenie o tym, że
+# rozkłady danych z Trainset można aproksymować rozkładem 
+# normalnym.
+
+
+
+####rok powstania sklepóW a ich wielkosc####
+table(Outlet_Establishment_Year) 
+table(Outlet_Identifier)
+table(Outlet_Size)
+table(Outlet_Location_Type)
+table(Outlet_Type)
+table (Item_Type)
+
+table(Outlet_Establishment_Year,Outlet_Identifier,
+Outlet_Size, Outlet_Location_Type,Outlet_Type,
+Item_Type)
+
+#widzimy że najwiecej sklepów to male jednostki,
+#rowniez widizmy ze najwiecej sklepow uzwytych w tym projekcie
+#powstalo w 1985r
+
+
+
+##########################################
+##############################staty################
+###############################################
+
+
+#####dane ciągle
+
+
+####podsumowanie widzialność produktu 
+
+summary(Item_Visibility)#średnia =  0.06613 , mediana= 0.05393
+IQR(Item_Visibility)#rozstęp między kwartylami wynosi  0.06759582
+kurtosis(Item_Visibility)# kurtoza = 4.677757 wskazuje na wysmukły wykres
+skewness(Item_Visibility)# występuje dość znaczna asymetria prawostronna
+sd(Item_Visibility)
+
+
+####podsumowanie MPR
+summary(Item_MRP)# średnia = 140.99, mediana = 143.01
+IQR(Item_MRP)# rozstęp ćwiarkowy wynosi 91.8172
+skewness(Item_MRP)#skosność = 0.12718 wskazuje na to że wykres jest prawie symetryczny
+kurtosis(Item_MRP)#kurtoza wskazuje na to że wykres jest spłaszczony
+sd(Item_MRP)
+
+
+####podsumowanie Item weight
+summary(Item_Weight, na.rm=T)# mediana = 12.600, średnia = 12.858
+IQR(Item_Weight, na.rm=T) # rozstęp ćwiartkowy = 8.07625
+skewness(Item_Weight, na.rm = T)# skośnośc wskazujen na to że wykres jest prawie symetryczny
+kurtosis(Item_Weight, na.rm = T)# wykres spłaszczony
+sd(Item_Weight, na.rm=T)
+
+
+####podsumowanie Item Outlet sales
+summary(Item_Outlet_Sales)# medniana = 1794.33, średnia = 2181.29 
+IQR(Item_Outlet_Sales)#rozstęp ćwiartkowy = 2267.049
+skewness(Item_Outlet_Sales, na.rm = T)# skośność = 1.177323, asymetria prawo stronna
+kurtosis(Item_Outlet_Sales, na.rm = T)# kurtoza = 4.614225, wykres wysmukły
+sd(Item_Outlet_Sales)
+
+
+
+
+
+#####################################
+######wykresy,wybierzmy stąd#################
+ #################################
+
+
+
+################dane dyskretne z outlieres################
+
 ##typ produktu
 
- #funkcje
-elim.deter<- function(x){((length(x)-1)/length(x))}
-var.wd <- function(x){ sum((x-mean(x))^2)/length(x)}
-
-
-#wykres #mysle że z tych mozemy brac po jednym, jako wstep do danych
-
-table(TrainSet$Item_Type)
-as.data.frame(table(TrainSet$Item_Type))-> Typ_produktu_data_frame
-ggplot(data = Typ_produktu_data_frame, aes(x= Var1, y= Freq, group = 1))+
-  geom_bar(stat= 'identity',color = 'blue')+ labs(x= "produkt", y= 'częstosc zakupu')+
-  scale_x_discrete(labels = abbreviate)
-
-###boxplot 
-
-#item visibility
- TrainSet %>% ggplot(aes(x= "box_plot_item_visibility",y= Item_Visibility))+geom_boxplot()
- 
- #item_MRP
- TrainSet %>% ggplot(aes(x= "Item_MRP",y= Item_MRP))+geom_boxplot()
-
-#item weight
- TrainSet %>% ggplot(aes(x= "Item_Weight",y= Item_Weight))+geom_boxplot()
-
- #item outlet sales
- TrainSet %>% ggplot(aes(x= "Outlet_Sales",y= Item_Outlet_Sales))+geom_boxplot()
-
-
-
-#Troszkę inny sposób, histogram to jest dokładnie wykres częstości, dla danych discrete używamy stat = "count"
-#wtedy sam liczy częstość występowania cechy
 TrainSet %>% ggplot(aes(x = Item_Type)) + 
   geom_histogram(stat = "count") +
-  scale_x_discrete(labels = abbreviate)
-#gdy axis labels nachodzą na siebie
-
-#podsumowanie
-summary(Typ_produktu_data_frame)
-
+  scale_x_discrete(labels = abbreviate) #gdy axis labels nachodzą na siebie
 
 
 ##lokalizacja
 
-#wykres
-table(TrainSet$Outlet_Location_Type)
-as.data.frame(table(TrainSet$Outlet_Location_Type))-> Outlet_Localisation_data_frame
-ggplot(Outlet_Localisation_data_frame, aes(x= Var1 , y= Freq))+
-  geom_bar(stat ="identity", alpha= 0.6, color= 'green') +
-  labs(x = 'Tier', y = "ilość")
-
-
-#wersja poprawiona
+#slupkowy
 TrainSet %>% select(Outlet_Location_Type) %>% table() %>% as.data.frame() %>% 
   ggplot(aes(x=., y= Freq))+geom_bar(stat ="identity", alpha= 0.6, color= 'green') +
   labs(x = 'Tier', y = "ilość")
 
-## wykres kolowy
+# wykres kolowy
 TrainSet %>% ggplot(aes(x = Outlet_Location_Type, fill = factor(Outlet_Location_Type))) + 
   geom_histogram(stat="count") + 
   coord_polar(theta = "x") + 
   labs(x = "", y = "", fill = 'Lokalizacja sklepu')
+
+
 
 
 ##rozmiar
@@ -114,26 +149,17 @@ TrainSet %>% ggplot(aes(x = Outlet_Size, fill = factor(Outlet_Size))) +
   labs(x = "", y = "", fill = 'rozmiar')
 
 
-#wykres słupkowy
-ggplot(Outlet_Size_data_frame, aes(x= Var1 , y= Freq))+
-    geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
-       labs(x = 'wielkosc', y = "ilość")
-
 # poprawiony
 TrainSet %>% select(Outlet_Size) %>% table() %>% as.data.frame() %>% 
- ggplot(aes(x=. , y= Freq))+ geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
+  ggplot(aes(x=. , y= Freq))+ geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
   labs(x = 'wielkosc', y = "ilość")
+
+
 
 ##identyfikator_sklepu
 
 
 #wykres słupkowy
-as.data.frame(table(TrainSet$Outlet_Identifier))->Outlet_Identifier_data_frame
-ggplot(Outlet_Identifier_data_frame, aes(x= Var1 , y= Freq))+
-  geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
-  labs(x = 'Outlet', y = "występywanie")
-
-#poprawiony
 
 TrainSet %>% select(Outlet_Identifier) %>% table() %>% as.data.frame() %>% 
 ggplot(aes(x=., y=Freq))+geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
@@ -145,16 +171,9 @@ TrainSet %>% ggplot(aes(x = Outlet_Identifier, fill = factor(Outlet_Identifier))
   coord_polar(theta = "x") + 
   labs(x = "", y = "", fill = 'identyfikator sklepu')
 
-#podsumowanie
-summary(Outlet_Identifier_data_frame)
 
+##zawartość tłuszczy
 
-#zawartość tłuszczów 
-as.data.frame(table(Item_Fat_Content))->Item_Fat_Content_data_frame
-ggplot(Item_Fat_Content_data_frame, aes(x= Item_Fat_Content , y= Freq))+ geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
-labs(x = 'tłuszcz', y = "występywanie")
-
-#poprawiony
 TrainSet %>% select(Item_Fat_Content) %>% table() %>% as.data.frame() %>% 
   ggplot( aes(x= . , y= Freq))+ geom_bar(stat ="identity", alpha= 0.9, color= 'green')+
   labs(x = 'tłuszcz', y = "występywanie")  
@@ -165,15 +184,7 @@ TrainSet %>% ggplot(aes(x = Item_Fat_Content, fill = factor(Item_Fat_Content))) 
   coord_polar(theta = "x") + 
   labs(x = "", y = "", fill = 'zawartość tłuszczu')
 
-
-summary(Item_Fat_Content_data_frame)
-
-
 ## powstawanie sklepów
-as.data.frame(table(Outlet_Establishment_Year))->Outlet_Establishment_Year_data_frame
-ggplot(Outlet_Establishment_Year_data_frame, aes(x= Outlet_Establishment_Year, y= Freq))+
-  geom_bar(stat = 'identity')+
-  labs(x= "rok powstania",y = "ilość")
 
 #poprawiony
 TrainSet %>% select(Outlet_Establishment_Year) %>% table() %>% as.data.frame() %>% 
@@ -186,248 +197,84 @@ TrainSet %>% ggplot(aes(x = Outlet_Establishment_Year, fill = factor(Outlet_Esta
   geom_histogram(stat="count") + 
   coord_polar(theta = "x") + 
   labs(x = "", y = "", fill = 'Typ produktu')
-    
-#podsumowanie
-summary(Outlet_Establishment_Year_data_frame)
+
+
+
+###############Dane ciągłe############
 
 ##widzialność produktu 
-
 
 #histogram
 TrainSet %>% ggplot(aes(x = Item_Visibility)) +
   geom_histogram(bins = 50, color = "blue")
 
-#podsumowanie
-summary(Item_Visibility)#średnia =  0.06613 , mediana= 0.05393
-
-IQR(Item_Visibility)#rozstęp między kwartylami wynosi  0.06759582
-kurtosis(Item_Visibility)# kurtoza = 4.677757 wskazuje na wysmukły wykres
-skewness(Item_Visibility)# występuje dość znaczna asymetria prawostronna
-sd(Item_Visibility)
-elim.deter(Item_Visibility)*sd(Item_Visibility)
-
 
 ##MRP
-
 
 #histogram
 TrainSet %>% ggplot(aes(x = Item_MRP)) +
       geom_histogram(bins = 50, color= "blue")
 
-
-
-#podsumowanie
- summary(Item_MRP)# średnia = 140.99, mediana = 143.01
- IQR(Item_MRP)# rozstęp ćwiarkowy wynosi 91.8172
  
- skewness(Item_MRP)#skosność = 0.12718 wskazuje na to że wykres jest prawie symetryczny
- kurtosis(Item_MRP)#kurtoza wskazuje na to że wykres jest spłaszczony
- sd(Item_MRP)
- elim.deter(Item_MRP)*sd(Item_MRP)
-
- 
- ###Item_weight
+##Item_weight
  
  #histogram
  TrainSet %>% ggplot(aes(x = Item_Weight)) +
    geom_histogram(bins = 50, color = "blue")
-  
-  #podsumowanie
- summary(Item_Weight, na.rm=T)# mediana = 12.600, średnia = 12.858
- IQR(Item_Weight, na.rm=T) # rozstęp ćwiartkowy = 8.07625
- skewness(Item_Weight, na.rm = T)# skośnośc wskazujen na to że wykres jest prawie symetryczny
- kurtosis(Item_Weight, na.rm = T)# wykres spłaszczony
- sd(Item_Weight)
- elim.deter(Item_Weight)*sd(Item_Weight)
- 
- 
- ###Item Outlet sales
+
+   
+##Item Outlet sales
  
  #histogram
  TrainSet %>% ggplot(aes(x = Item_Outlet_Sales)) +
       geom_histogram(bins = 50, color = "blue")
- #podsumowanie
- summary(Item_Outlet_Sales)# medniana = 1794.33, średnia = 2181.29 
- IQR(Item_Outlet_Sales)#rozstęp ćwiartkowy = 2267.049
- skewness(Item_Outlet_Sales, na.rm = T)# skośność = 1.177323, asymetria prawo stronna
- kurtosis(Item_Outlet_Sales, na.rm = T)# kurtoza = 4.614225, wykres wysmukły
- sd(Item_Outlet_Sales)
- elim.deter(Item_Outlet_Sales)*sd( Item_Outlet_Sales)
+
  
  
- 
- 
- 
- #data without outliers # 
- ##sposob z https://www.youtube.com/watch?v=6hRKlZ8D_mk
+ ###boxplot #################################3
  
  #item visibility
- summary(Item_Visibility)
- benchIVS<- 0.09459 + 1.5*IQR(Item_Visibility)
- Item_Visibility[Item_Visibility< benchIVS]-> Item_Visibility_Without_Outliers
+ TrainSet %>% ggplot(aes(x= "box_plot_item_visibility",y= Item_Visibility))+geom_boxplot()
  
- #histogram
- ggplot( as.data.frame(Item_Visibility_Without_Outliers),
-         aes(x =Item_Visibility_Without_Outliers))+ 
-   geom_histogram(fill='orange', col ='black')
-
- length(Item_Visibility)
- length(Item_Visibility_Without_Outliers)
-  
- #podsumowanie
- summary(Item_Visibility_Without_Outliers)
- sd(Item_Visibility_Without_Outliers)
- elim.deter(Item_Visibility_Without_Outliers)*sd(Item_Visibility_Without_Outliers)
+ #item_MRP
+ TrainSet %>% ggplot(aes(x= "Item_MRP",y= Item_MRP))+geom_boxplot()
  
+ #item weight
+ TrainSet %>% ggplot(aes(x= "Item_Weight",y= Item_Weight))+geom_boxplot()
  
  #item outlet sales
- summary(Item_Outlet_Sales)
- benchIOSS<- 3101.30 + 1.5*IQR(Item_Outlet_Sales)
- Item_Outlet_Sales[Item_Outlet_Sales< benchIOSS]-> 
-   Item_OUtlet_Sales_Without_Outliers
+ TrainSet %>% ggplot(aes(x= "Outlet_Sales",y= Item_Outlet_Sales))+geom_boxplot()
  
- #histogram
- ggplot(as.data.frame(Item_OUtlet_Sales_Without_Outliers),
-        aes(x= Item_OUtlet_Sales_Without_Outliers))+
-   geom_histogram(fill= "red", col ="black")
  
- #z uzyciem dplyr
- Item_OUtlet_Sales_Without_Outliers %>% as.data.frame() %>%
-   ggplot( aes (x=.))+geom_histogram(fill= "red", col ="black")
  
- length(Item_Outlet_Sales)
- length(Item_OUtlet_Sales_Without_Outliers)
  
- #podsumowanie
- summary(Item_OUtlet_Sales_Without_Outliers)
- sd(Item_OUtlet_Sales_Without_Outliers)
- elim.deter(Item_OUtlet_Sales_Without_Outliers)*sd( Item_OUtlet_Sales_Without_Outliers)
  
- #data_without_outliers
- #Grubbs test
- 
- require(outliers)
- library(outliers)
 
  
- grubbs.test(Item_Outlet_Sales)
- grubbs.test(Item_Visibility)
- grubbs.test(Item_Weight)
- grubbs.test(Item_MRP)
- 
- #outliers
-#item_visibility
- outliers_Iv <-c(Item_Visibility[Item_Visibility>benchIVS])
- outliers_Iv
- 
- ggplot(as.data.frame(outliers_Iv),
-             aes(x= outliers_Iv))+
-      geom_histogram(fill= "red", col ="black")
- 
-# z uzyciem dplyr 
-outliers_Iv %>% as.data.frame()%>%
-  ggplot(aes(x = .))+ 
-  geom_histogram(fill= "red", col ="black")
-
-    
-      summary(outliers_Iv)  
-  
-#item_outlet_sales      ou
- 
- outliers_IOS<-c(Item_Outlet_Sales[Item_Outlet_Sales>benchIOSS])
- outliers_IOS
- 
- ggplot(as.data.frame(outliers_IOS),
-        aes(x= outliers_IOS))+
- geom_histogram(fill= "red", col ="black")
- 
- #z uzyciem dplyr
- outliers_IOS %>% as.data.frame()%>%
-   ggplot(aes(x=.))+
-   geom_histogram(fill= "red", col ="black")
- 
- 
- summary(outliers_IOS)  
- 
- #mahalanobis 
- 
- data.frame(Item_Visibility, Item_Outlet_Sales)->IVS.d
- MD <- mahalanobis(IVS.d, colMeans(IVS.d), cov(IVS.d))
- IVS.d$MD <- round(MD,3)
- benchMD<- 2.2423+ 1.5*IQR(MD)
- IVS.d$outlier_maha <- "F"
- IVS.d$outlier_maha[IVS.d$MD > benchMD]<-"T"
- IVS.d
- 
- 
- #Searching for outliers using Grubbs Test
- TrainSet %>% select(Item_Weight) %>% arrange(desc(Item_Weight))
- grubbs.test(TrainSet$Item_Weight)
- TrainSet %>% select(Item_Visibility) %>% arrange(desc(Item_Visibility))
- Grubbs_Item_Visibility <- grubbs.test(TrainSet$Item_Visibility)
- TrainSet %>% select(Item_Visibility) %>% arrange(desc(Item_Visibility)) %>% ggplot(aes(x = 1:nrow(TrainSet), y = Item_Visibility)) + geom_point()
- grubbs.test(TrainSet$Item_MRP)
- TrainSet %>% select(Item_Outlet_Sales) %>% arrange(desc(Item_Outlet_Sales))
- Gdubbs_Item_Outlet_Sales <- grubbs.test(TrainSet$Item_Outlet_Sales)
- TrainSet %>% select(Item_Outlet_Sales) %>% arrange(desc(Item_Outlet_Sales)) %>% ggplot(aes(x = 1:nrow(TrainSet), y = Item_Outlet_Sales)) + geom_point()
- 
- Testowy <- TrainSet
- Grubbs_Item_Visibility_Testowy <- grubbs.test(Testowy$Item_Visibility)
- Grubbs_Item_MRP_Testowy <- grubbs.test(Testowy$Item_MRP)
- 
- #wersja Alpha
- #item_visiblity
- while(Grubbs_Item_Visibility_Testowy$p.value <= 0.05){
-   Testowy <- Testowy[-which.max(Testowy$Item_Visibility),]
-   Grubbs_Item_Visibility_Testowy <- grubbs.test(Testowy$Item_Visibility)
- }
-
- 
-##### z uwagi na dużą probę przyjmujemy założenie o tym, że
- # rozkłady danych z Trainset można aproksymować rozkładem 
- # normalnym.
- 
- 
- #wykresy 2 danych
- data.frame(Outlet_Establishment_Year, Outlet_Type, Outlet_Size)->do.wykresów
+ ##########wykresy 2 danych###########
 
  
  ####rok powstania sklepóW a ich wielkosc####
- table(Outlet_Establishment_Year, Outlet_Size)
  
- #widzimy że najwiecej sklepów to male jednostki,
- #rowniez widizmy ze najwiecej sklepow uzwytych w tym projekcie
- #powstalo w 1985r
- 
- #wykres
- as.data.frame(table(Outlet_Establishment_Year, Outlet_Size, Outlet_Location_Type))->a
- qplot(Outlet_Establishment_Year, Freq, color = Outlet_Size,
-       data =a, size =4, facets = .~ Outlet_Location_Type)+
-   scale_x_discrete(labels = abbreviate)
- 
- #poprawiony
  TrainSet %>% select(Outlet_Establishment_Year, Outlet_Size, 
   Outlet_Location_Type) %>% table() %>% as.data.frame()%>%
   ggplot(aes (x=Outlet_Establishment_Year , y = Freq))+
    geom_point(aes(color = Outlet_Size), size =3)+
    facet_grid(.~ Outlet_Location_Type)
   
- #wykres kołowy przedstawiajacy wielkość sklepu i lokalizacje #moze ten
+ ####wykres kołowy przedstawiajacy wielkość sklepu i lokalizacje #moze ten
  TrainSet %>% ggplot(aes(x =Outlet_Location_Type  , fill = factor(Outlet_Size))) + 
    geom_histogram(stat="count") + 
    coord_polar(theta = "x") + 
    labs(x = "", y = "", fill = 'wielkość sklepu')
-   
-   
+  
  
- #wykres ilsoci powstalych sklepów, w danych latach, pogrupownych
- #wg lokalizacji,kolor oznacza wielkosc sklepu
- 
- 
- #wykres wystepowania sklepow o danym identyfiktorze w danej lokalizacji
+ ####wykres wystepowania sklepow o danym identyfiktorze w danej lokalizacji
  TrainSet %>% select(Outlet_Identifier, Outlet_Location_Type)%>% table() %>% as.data.frame()%>%
      ggplot(aes ( Outlet_Identifier, Freq))+geom_point(aes (size = 3))+ facet_grid(.~ Outlet_Location_Type)+
    scale_x_discrete(labels = abbreviate)
+ 
+ 
  
   #####wykresy wielkosci sprzedazy # warto by sie nad tym zastnowic#
   
@@ -546,7 +393,7 @@ outliers_Iv %>% as.data.frame()%>%
  #Outlet_Identifire
  TrainSet %>% select(Item_MRP, Item_Visibility, Outlet_Identifier) %>%
    ggplot(aes(x= Item_Visibility, y= Item_MRP))+
-   geom_bin2d()+ facet_wrap( ~ Outlet_MPR)
+   geom_bin2d()+ facet_wrap( ~ Outlet_Identifier)
  
  #outlet_Location_Type
  TrainSet %>% select(Item_MRP, Item_Visibility, Outlet_Location_Type) %>%
@@ -563,84 +410,277 @@ outliers_Iv %>% as.data.frame()%>%
    ggplot(aes(x= Item_Visibility, y= Item_MRP))+
    geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
  
+
  
- #######################korelacje #############################
+ #################################################################
+ ####### #######################korelacje #############################
  
  ##dane liczbowe
-  TrainSet %>% select(Item_Weight, Item_Visibility, Item_MRP, Item_Outlet_Sales) %>% cor %>% corrplot 
+ TrainSet %>% select(Item_Weight, Item_Visibility, Item_MRP, Item_Outlet_Sales) %>% cor %>% corrplot 
  
  
- ## tansfirmacja danych
  
-  ## logrytm , sqrt
- # item visibility
+ 
+ 
+ 
+ ######################################
+ ######### tansfirmacja danych######### nie wiem czy to sie przyda 
+ 
+ ######## logrytm , sqrt   czy te transformacje sa wlasciwe ? 
+ 
+ 
+ #######statystyki
+ 
+ ######log
+ 
+ ##item visibility
  TrainSet %>% select(Item_Visibility) %>% summary() # dane bez transformacji
  TrainSet %>% select(Item_Visibility) %>% +1 %>% log %>% summary() #dane po transformacji logarytmincznej( 1 dodana by uniknac inf )
-  TrainSet %>% ggplot(aes(x = log(Item_Visibility+1)))+ geom_histogram() # wykres po transformacji log
-  TrainSet %>% ggplot(aes(x= sqrt(Item_Visibility)))+ geom_histogram() # wykres po transormacji pierwiastkowej
-   
-  ## czy te transformacje sa wlasciwe ? 
+ 
+ ##item_weight
+ TrainSet %>% select(Item_Weight)%>% +1 %>% log %>% summary()
+ TrainSet %>% select(Item_Weight)%>% +1 %>% log %>% kurtosis()
+ TrainSet %>% select(Item_Weight)%>% +1 %>% log %>% skewness()
+ sd(log(TrainSet$Item_Weight)+1)  
+ 
+ ##item_MPR
+ TrainSet %>% select(Item_MRP)%>% +1 %>% log %>% summary()
+ TrainSet %>% select(Item_MRP)%>% +1 %>% log %>% kurtosis()
+ TrainSet %>% select(Item_MRP)%>% +1 %>% log %>% skewness()
+ sd(log(TrainSet$Item_MRP)+1)  
+ 
+ ##item_outlet_sales
+ TrainSet %>% select(Item_Outlet_Sales)%>% +1 %>% log %>% summary()
+ TrainSet %>% select(Item_Outlet_Sales)%>% +1 %>% log %>% kurtosis()
+ TrainSet %>% select(Item_Outlet_Sales)%>% +1 %>% log %>% skewness()
+ sd(log(TrainSet$Item_Outlet_Sales)+1)  
+
+ #####sqrt
+ 
+ ##item visibility
+ TrainSet %>% select(Item_Visibility) %>% summary() # dane bez transformacji
+ TrainSet %>% select(Item_Visibility) %>% sqrt %>% summary() #dane po transformacji logarytmincznej( 1 dodana by uniknac inf )
+ TrainSet %>% select(Item_Visibility) %>% sqrt %>% kurtosis()
+ TrainSet %>% select(Item_Visibility) %>% sqrt %>% skewness()
+ sd(sqrt(TrainSet$Item_Visibility))   
+ 
+ ##item_weight
+ TrainSet %>% select(Item_Weight)%>% sqrt  %>% summary()
+ TrainSet %>% select(Item_Weight) %>% sqrt %>% kurtosis()
+ TrainSet %>% select(Item_Weight) %>% sqrt %>% skewness()
+ sd(sqrt(TrainSet$Item_Weight))
+ 
+ ##item_MPR
+ TrainSet %>% select(Item_MRP)%>% sqrt %>% summary()
+ TrainSet %>% select(Item_MRP) %>% sqrt %>% kurtosis()
+ TrainSet %>% select(Item_MRP) %>% sqrt %>% skewness()
+ sd(sqrt(TrainSet$Item_MRP))
+ 
+ ##item_outlet_sales
+ TrainSet %>% select(Item_Outlet_Sales)%>% sqrt %>% summary()
+ TrainSet %>% select(Item_Outlet_Sales) %>% sqrt %>% kurtosis()
+ TrainSet %>% select(Item_Outlet_Sales) %>% sqrt %>% skewness()
+ sd(sqrt(TrainSet$Item_Outlet_Sales))
+ 
+ 
+ #####corr
+ TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales)%>% +1 %>% log %>% cor()
+ TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales) %>% sqrt %>% cor()
+ 
+ 
+ ####wykresy 
+ 
+ # item_visibility
+ TrainSet %>% ggplot(aes(x = log(Item_Visibility+1)))+ geom_histogram() # wykres po transformacji log
+ TrainSet %>% ggplot(aes(x= sqrt(Item_Visibility)))+ geom_histogram() # wykres po transormacji pierwiastkowej
+ 
+ # item weight
+ TrainSet %>% ggplot(aes(x = log(Item_Weight+1)))+ geom_histogram()
+ TrainSet %>% ggplot(aes (x= sqrt(Item_Weight)))+ geom_histogram()
+ 
+ # item Mpr
+ TrainSet %>% ggplot(aes (x = log(Item_MRP+1)))+ geom_histogram()
+ TrainSet %>% ggplot(aes (x = sqrt(Item_MRP)))+ geom_histogram()
+ 
+ # item outlet sales
+ TrainSet %>% ggplot(aes (x= log (Item_Outlet_Sales+1)))+ geom_histogram()
+ TrainSet %>% ggplot(aes (x= sqrt(Item_Outlet_Sales)))+ geom_histogram() 
+ 
+ ##wykresy MPR I sales po transf
+ 
+ #log
+ #Outlet_Identifire
+ TrainSet %>%  ggplot(aes(x= log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+
+   geom_bin2d()+facet_wrap(~ Outlet_Identifier)
+ 
+ #outlet_Location_Type
+ TrainSet %>% ggplot( aes(x = log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+ 
+   geom_point()+ facet_wrap( ~ Outlet_Location_Type)
+ 
+ #Outlet_Size
+ TrainSet %>% ggplot(aes(x= log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+
+   geom_bin2d()+ facet_wrap( ~ Outlet_Size)
+ 
+ #outlet_estabilshment_year
+ TrainSet %>%ggplot(aes(x= log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+
+   geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
+ 
+ 
+ 
+ #sqrt
+ #Outlet_Identifire
+ 
+ TrainSet %>%  ggplot(aes(x= sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+
+   geom_bin2d()+facet_wrap(~ Outlet_Identifier)
+ 
+ #outlet_Location_Type
+ TrainSet %>% ggplot( aes(x = sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+ 
+   geom_point()+ facet_wrap( ~ Outlet_Location_Type)
+ 
+ #Outlet_Size
+ TrainSet %>% ggplot(aes(x= sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+
+   geom_bin2d()+ facet_wrap( ~ Outlet_Size)
+ 
+ #outlet_estabilshment_year
+ TrainSet %>%ggplot(aes(x= sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+
+   geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ #######data without outliers #######################3 
+ ##sposob z https://www.youtube.com/watch?v=6hRKlZ8D_mk
+ 
+ ########item visibility
+ summary(Item_Visibility)
+ benchIVS<- 0.09459 + 1.5*IQR(Item_Visibility)
+ Item_Visibility[Item_Visibility< benchIVS]-> Item_Visibility_Without_Outliers
+ 
+ #histogram
+ ggplot( as.data.frame(Item_Visibility_Without_Outliers),
+         aes(x =Item_Visibility_Without_Outliers))+ 
+   geom_histogram(fill='orange', col ='black')
+ 
+ length(Item_Visibility)
+ length(Item_Visibility_Without_Outliers)
+ 
+ #podsumowanie
+ summary(Item_Visibility_Without_Outliers)
+ sd(Item_Visibility_Without_Outliers)
+ elim.deter(Item_Visibility_Without_Outliers)*sd(Item_Visibility_Without_Outliers)
+ 
+ 
+ #########item outlet sales
+ summary(Item_Outlet_Sales)
+ benchIOSS<- 3101.30 + 1.5*IQR(Item_Outlet_Sales)
+ Item_Outlet_Sales[Item_Outlet_Sales< benchIOSS]-> 
+   Item_OUtlet_Sales_Without_Outliers
+ 
+ #histogram
+ ggplot(as.data.frame(Item_OUtlet_Sales_Without_Outliers),
+        aes(x= Item_OUtlet_Sales_Without_Outliers))+
+   geom_histogram(fill= "red", col ="black")
+ 
+ #z uzyciem dplyr
+ Item_OUtlet_Sales_Without_Outliers %>% as.data.frame() %>%
+   ggplot( aes (x=.))+geom_histogram(fill= "red", col ="black")
+ 
+ length(Item_Outlet_Sales)
+ length(Item_OUtlet_Sales_Without_Outliers)
+ 
+ #podsumowanie
+ summary(Item_OUtlet_Sales_Without_Outliers)
+ sd(Item_OUtlet_Sales_Without_Outliers)
+ elim.deter(Item_OUtlet_Sales_Without_Outliers)*sd( Item_OUtlet_Sales_Without_Outliers)
+ 
+ 
+ 
+ #######data_without_outliers#################################
+ ####Grubbs test###############
+ 
+ require(outliers)
+ library(outliers)
+ 
+ 
+ grubbs.test(Item_Outlet_Sales)
+ grubbs.test(Item_Visibility)
+ grubbs.test(Item_Weight)
+ grubbs.test(Item_MRP)
   
-  # item weight
-  TrainSet %>% select(Item_Weight)%>% +1 %>% log %>% summary()
-  TrainSet %>% ggplot(aes(x = log(Item_Weight+1)))+ geom_histogram()
-TrainSet %>% ggplot(aes (x= sqrt(Item_Weight)))+ geom_histogram()
+ #Searching for outliers using Grubbs Test
+ TrainSet %>% select(Item_Weight) %>% arrange(desc(Item_Weight))
+ grubbs.test(TrainSet$Item_Weight)
+ TrainSet %>% select(Item_Visibility) %>% arrange(desc(Item_Visibility))
+ Grubbs_Item_Visibility <- grubbs.test(TrainSet$Item_Visibility)
+ TrainSet %>% select(Item_Visibility) %>% arrange(desc(Item_Visibility)) %>% ggplot(aes(x = 1:nrow(TrainSet), y = Item_Visibility)) + geom_point()
+ grubbs.test(TrainSet$Item_MRP)
+ TrainSet %>% select(Item_Outlet_Sales) %>% arrange(desc(Item_Outlet_Sales))
+ Gdubbs_Item_Outlet_Sales <- grubbs.test(TrainSet$Item_Outlet_Sales)
+ TrainSet %>% select(Item_Outlet_Sales) %>% arrange(desc(Item_Outlet_Sales)) %>% ggplot(aes(x = 1:nrow(TrainSet), y = Item_Outlet_Sales)) + geom_point()
+ 
+ Testowy <- TrainSet
+ Grubbs_Item_Visibility_Testowy <- grubbs.test(Testowy$Item_Visibility)
+ Grubbs_Item_MRP_Testowy <- grubbs.test(Testowy$Item_MRP)
+ 
+ #wersja Alpha
+ #item_visiblity
+ while(Grubbs_Item_Visibility_Testowy$p.value <= 0.05){
+   Testowy <- Testowy[-which.max(Testowy$Item_Visibility),]
+   Grubbs_Item_Visibility_Testowy <- grubbs.test(Testowy$Item_Visibility)
+ } 
 
-# item Mpr
-TrainSet %>% ggplot(aes (x = log(Item_MRP+1)))+ geom_histogram()
-TrainSet %>% ggplot(aes (x = sqrt(Item_MRP)))+ geom_histogram()
-
-# item outlet sales
-TrainSet %>% ggplot(aes (x= log (Item_Outlet_Sales+1)))+ geom_histogram()
-TrainSet %>% ggplot(aes (x= sqrt(Item_Outlet_Sales)))+ geom_histogram() 
-
-#corr
-TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales)%>% +1 %>% log %>% cor()
-TrainSet %>% select( Item_Visibility, Item_MRP, Item_Weight, Item_Outlet_Sales) %>% sqrt %>% cor()
-
-
-#wykresy MPR I sales po transf
-
-#log
-
-#Outlet_Identifire
-
-TrainSet %>%  ggplot(aes(x= log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+
-  geom_bin2d()+facet_wrap(~ Outlet_Identifier)
-
-#outlet_Location_Type
-TrainSet %>% ggplot( aes(x = log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+ 
-  geom_point()+ facet_wrap( ~ Outlet_Location_Type)
-
-#Outlet_Size
-TrainSet %>% ggplot(aes(x= log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+
-  geom_bin2d()+ facet_wrap( ~ Outlet_Size)
-
-#outlet_estabilshment_year
-TrainSet %>%ggplot(aes(x= log(Item_MRP)+1, y= log(Item_Outlet_Sales)+1))+
-  geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
-
-#sqrt
-#Outlet_Identifire
-
-TrainSet %>%  ggplot(aes(x= sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+
-  geom_bin2d()+facet_wrap(~ Outlet_Identifier)
-
-#outlet_Location_Type
-TrainSet %>% ggplot( aes(x = sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+ 
-  geom_point()+ facet_wrap( ~ Outlet_Location_Type)
-
-#Outlet_Size
-TrainSet %>% ggplot(aes(x= sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+
-  geom_bin2d()+ facet_wrap( ~ Outlet_Size)
-
-#outlet_estabilshment_year
-TrainSet %>%ggplot(aes(x= sqrt(Item_MRP), y= sqrt(Item_Outlet_Sales)))+
-  geom_bin2d()+ facet_wrap( ~Outlet_Establishment_Year)
-
+ #############outliers###################################
+ 
+ #item_visibility
+ outliers_Iv <-c(Item_Visibility[Item_Visibility>benchIVS])
+ outliers_Iv
   
-### dane dyskretne
+ outliers_Iv %>% as.data.frame()%>%
+   ggplot(aes(x = .))+ 
+   geom_histogram(fill= "red", col ="black")
+ 
+ 
+ summary(outliers_Iv)  
+ 
+ #item_outlet_sales      ou
+ 
+ outliers_IOS<-c(Item_Outlet_Sales[Item_Outlet_Sales>benchIOSS])
+ outliers_IOS
+ 
+ #z uzyciem dplyr
+ outliers_IOS %>% as.data.frame()%>%
+   ggplot(aes(x=.))+
+   geom_histogram(fill= "red", col ="black")
+ 
+ 
+ summary(outliers_IOS)  
+ 
+ #####mahalanobis############# 
+ 
+ data.frame(Item_Visibility, Item_Outlet_Sales)->IVS.d
+ MD <- mahalanobis(IVS.d, colMeans(IVS.d), cov(IVS.d))
+ IVS.d$MD <- round(MD,3)
+ benchMD<- 2.2423+ 1.5*IQR(MD)
+ IVS.d$outlier_maha <- "F"
+ IVS.d$outlier_maha[IVS.d$MD > benchMD]<-"T"
+ IVS.d
+ 
+ 
+ 
+#############################################################
+############# dane dyskretne############ nie wiem co z tym, czy bedzie brane do modelu 
 
+##chi2, wspolczynik crammera 
+ 
 TrainSet %>% select(Outlet_Size, Item_Type) %>% table() %>% chisq.test() # korelacja
 TrainSet %>% select(Outlet_Size, Item_Type) %>% table() %>% cramersV() # korelacja pomiedzy wielkoscia sklepu a typem przedmiotu
 
