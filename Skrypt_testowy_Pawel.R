@@ -9,6 +9,7 @@ require(VIM)
 require(outliers)
 require(lsr)
 require(GGally)
+require(broom)
 
 ###Sciezka
 Path <- getwd()
@@ -552,10 +553,39 @@ TrainSet %>% ggplot(aes(x = Item_MRP)) +
  
  
  
+ ###proste modele
  
+ ##item_outlet_sales ~ item_visibility+item_MPR
+ #linowy
+ lm(Item_Outlet_Sales ~ Item_MRP+Item_Visibility)
+ lm(Item_Outlet_Sales ~ Item_MRP+Item_Visibility)%>% summary()
+ lm(Item_Outlet_Sales ~ Item_MRP+Item_Visibility) %>% glance()
+ lm(Item_Outlet_Sales ~ Item_MRP+Item_Visibility) %>% tidy()
+ lm(Item_Outlet_Sales ~ Item_MRP+Item_Visibility) %>% augment() -> fitted_lm_values
+ fitted_lm_values
  
+ fitted_lm_values %>% ggplot(aes(y = .resid, x = .fitted))+geom_point()+
+   geom_hline(yintercept = 0 ) + geom_smooth( )
  
+ #wielomianowy
+ #2,3,4 stopnia
+ lm(Item_Outlet_Sales ~ I(Item_MRP)+I(Item_Visibility^2)) %>% summary()
+ lm(Item_Outlet_Sales ~ I(Item_MRP)+I(Item_Visibility^3)) %>% summary()
+ lm(Item_Outlet_Sales ~ I(Item_MRP)+I(Item_Visibility^4)) %>% summary()
+ lm(Item_Outlet_Sales ~ I(Item_MRP)+I(Item_Visibility^2)) %>% augment() -> fitted_poly_values
  
+  fitted_poly_values %>% ggplot(aes(y = .resid, x = .fitted))+geom_point()+
+   geom_hline(yintercept = 0 ) + geom_smooth( )
+  
+  #iloczyn
+  lm(Item_Outlet_Sales ~ Item_MRP*Item_Visibility) %>% summary()
+  lm(Item_Outlet_Sales ~ Item_MRP*Item_Visibility) %>% augment() -> fitted_mu_values
+        
+  fitted_mu_values %>% ggplot(aes(y = .resid, x = .fitted))+geom_point()+
+    geom_hline(yintercept = 0 ) + geom_smooth( )                                                                           
+                                                                               
+  
+   
  
  #######data without outliers #######################3 
  ##sposob z https://www.youtube.com/watch?v=6hRKlZ8D_mk
